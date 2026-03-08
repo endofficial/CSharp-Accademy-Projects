@@ -9,10 +9,10 @@ internal class CodingController
     {
         Clear();
         
-        /*bool dateSession = InputInsert.GetDateSessionInput();
-        if (dateSession == false) return false;*/
+        bool dateSession = InputInsert.GetDateSessionInput(out string date);
+        if (dateSession == false) return false;
 
-        bool durationSession = InputInsert.GetTimeSessionInput();
+        bool durationSession = InputInsert.GetTimeSessionInput(date);
         if (durationSession == false) return false;
 
         return true;
