@@ -6,32 +6,23 @@ namespace CodingTracker.Controller;
 
 internal class InputInsert
 {
-    internal static bool GetDateSessionInput(out string validatedDate)
+    internal static string GetDateSessionInput()
     {
         AnsiConsole.MarkupLine("[Aquamarine3]Register a new session.[/]\n");
         var date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n");
 
-        if (date == "0")
-        {
-            validatedDate = string.Empty; // Set a default value for the out parameter
-            return false;
-        }
+        if (date == "0") return "0";
 
         while (!DateTime.TryParseExact(date, "yyyy-MM-dd", new CultureInfo("en-EN"), DateTimeStyles.None, out _))
         {
             AnsiConsole.MarkupLine("[red]Invalid date format.[/]\n");
             date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]");
-            if (date == "0")
-            {
-                validatedDate = string.Empty; // Set a default value for the out parameter
-                return false;
-            }
+            if (date == "0") return "0";
         }
-        validatedDate = date;
-        return true;
+        return date;
     }
 
-    internal static bool GetTimeSessionInput(string sessionDate)
+    internal static CodingSessions? GetTimeSessionInput(string sessionDate)
     {
         string[] formats = { @"h\:mm", @"hh\:mm" };
         string description = AnsiConsole.Ask<string>("Please enter a description for the session. You can leave it empty if you want.");
@@ -52,7 +43,7 @@ internal class InputInsert
 
                 return ValidationResult.Success();
             }));
-        if (startInput == "0") return false;
+        if (startInput == "0") return null!;
 
         string endInput = AnsiConsole.Prompt(
             new TextPrompt<string>("[bold]\nPlease insert the end time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
@@ -69,20 +60,14 @@ internal class InputInsert
 
                 return ValidationResult.Success();
             }));
-        if (endInput == "0") return false;
+        if (endInput == "0") return null!;
 
         // Define another because DateTime.TryParseExact doesn't accept TimeSpan formats, it needs to be converted to DateTime
         string[] formatsTime = { "H\\:mm", "HH\\:mm" };
         // convert string to DateTime
-        if (!DateTime.TryParseExact(startInput, formatsTime, null, DateTimeStyles.None, out DateTime resultStart))
-        {
-            return false;
-        }
+        if (!DateTime.TryParseExact(startInput, formatsTime, null!, DateTimeStyles.None, out DateTime resultStart)) return null!;
 
-        if (!DateTime.TryParseExact(endInput, formatsTime, null, DateTimeStyles.None, out DateTime resultEnd))
-        {
-            return false;
-        }
+        if (!DateTime.TryParseExact(endInput, formatsTime, null!, DateTimeStyles.None, out DateTime resultEnd)) return null!;
 
         // calculate duration
         TimeSpan duration = resultEnd - resultStart;
@@ -94,7 +79,7 @@ internal class InputInsert
         AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
         Console.ReadKey();
 
-        return true;
+        return session;
     }
 }
 

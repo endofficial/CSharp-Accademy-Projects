@@ -8,7 +8,8 @@ namespace CodingTracker.Data;
 
 internal class Database
 {
-    private readonly string _connectionString;
+    // string.empty is used to initialize the connection string variable with an empty string, ensuring that it has a default value before being assigned the actual connection string from the configuration file.
+    private static string _connectionString = string.Empty;
 
     public Database()
     {
@@ -20,7 +21,7 @@ internal class Database
         _connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found in configuration.");
     }
 
-    public SqliteConnection GetConnection()
+    public static SqliteConnection GetConnection()
     {
         // Create and return a new SQLite connection using the connection string
         return new SqliteConnection(_connectionString);
@@ -35,6 +36,8 @@ internal class Database
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 StartTime TEXT NOT NULL,
                 EndTime TEXT NOT NULL,
+                Duration TEXT NOT NULL,
+                Date TEXT NOT NULL,
                 Description TEXT
             );";
 
