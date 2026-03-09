@@ -37,6 +37,7 @@ internal class UserInterface
                 case MenuAction.DeleteSession:
                     break;
                 case MenuAction.ViewSessions:
+                    CodingController.ViewSessions();
                     break;
                 case MenuAction.ExiSession:
                     closeApp = true;

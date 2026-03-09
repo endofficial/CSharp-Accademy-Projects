@@ -24,10 +24,12 @@ internal class CodingSessions
         Description = description;
     }
 
-    public void DisplaySession(int id, DateTime startTime, DateTime endTime, string date, TimeSpan duration, string? description)
+    public CodingSessions() { }
+
+    /*public void DisplaySession(int id, DateTime startTime, DateTime endTime, string date, TimeSpan duration, string? description)
     {
         AnsiConsole.MarkupLine($"\nSession registered: [green]{startTime:HH:mm} - {endTime:HH:mm}[/] with duration [blue]{duration:hh\\:mm}[/] and description: [yellow]{description}[/]. Date session: [green]{date}[/]");
-    }
+    }*/
 
     public void DisplayConfirmRegister()
     {
