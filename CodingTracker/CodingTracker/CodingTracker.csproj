@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="bin\Debug\net9.0\" />
+	  <None Include="bin\Debug\net9.0\CodingTracker.db" />
 	</ItemGroup>
 
 </Project>

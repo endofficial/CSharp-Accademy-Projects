@@ -65,9 +65,9 @@ internal class InputInsert
         // Define another because DateTime.TryParseExact doesn't accept TimeSpan formats, it needs to be converted to DateTime
         string[] formatsTime = { "H\\:mm", "HH\\:mm" };
         // convert string to DateTime
-        if (!DateTime.TryParseExact(startInput, formatsTime, null!, DateTimeStyles.None, out DateTime resultStart)) return null!;
+        if (!TimeOnly.TryParseExact(startInput, formatsTime, null!, DateTimeStyles.None, out TimeOnly resultStart)) return null!;
 
-        if (!DateTime.TryParseExact(endInput, formatsTime, null!, DateTimeStyles.None, out DateTime resultEnd)) return null!;
+        if (!TimeOnly.TryParseExact(endInput, formatsTime, null!, DateTimeStyles.None, out TimeOnly resultEnd)) return null!;
 
         // calculate duration
         TimeSpan duration = resultEnd - resultStart;

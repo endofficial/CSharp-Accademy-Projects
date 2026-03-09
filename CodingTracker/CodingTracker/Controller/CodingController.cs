@@ -25,7 +25,7 @@ internal class CodingController : Database
             // FERMO QUI: PROBLEMA CON LA REGISTRAZIONE DELLA TABELLA. NON TROVA I VALORI.
             string sql = @"
                 INSERT INTO CodingSessions (StartTime, EndTime, Date, Duration, Description)
-                VALUES (@startTime, @endTime, @date, @duration, @description);";
+                VALUES (@StartTime, @EndTime, @Date, @Duration, @Description);";
 
             connection.Execute(sql, durationSession);
         }

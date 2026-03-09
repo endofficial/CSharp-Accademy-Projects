@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Data;
+using Dapper;
 
 namespace CodingTracker
 {
@@ -6,6 +7,8 @@ namespace CodingTracker
     {
         static void Main(string[] args)
         {
+            SqlMapper.AddTypeHandler(new TimeOnlyTypeHandler()); // Register the TimeOnly type handler with Dapper
+
             Database database = new();
             database.Initialize();
 
