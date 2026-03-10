@@ -33,6 +33,7 @@ internal class UserInterface
                     CodingController.RegisterSession();
                     break;
                 case MenuAction.UpdateSession:
+                    CodingController.UpdateSession();
                     break;
                 case MenuAction.DeleteSession:
                     break;
