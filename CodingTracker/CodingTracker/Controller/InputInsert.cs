@@ -43,6 +43,7 @@ internal class InputInsert
 
                 return ValidationResult.Success();
             }));
+
         if (startInput == "0") return null!;
 
         string endInput = AnsiConsole.Prompt(
@@ -80,6 +81,49 @@ internal class InputInsert
         Console.ReadKey();
 
         return session;
+    }
+
+    internal static string OnlyStartTime()
+    {
+        string[] formats = { @"h\:mm", @"hh\:mm" };
+        string startInput = AnsiConsole.Prompt(
+            new TextPrompt<string>("[bold]\nPlease insert the start time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
+            .Validate(input =>
+            {
+                if (input == "0") return ValidationResult.Success();
+
+                // if the format is valid, it will be stored in the variable time, otherwise it will return false
+                bool isValid = TimeSpan.TryParseExact(input, formats, CultureInfo.InvariantCulture, out var time);
+
+                // Check if the time is valid and within the range of 0 to 24 hours
+                if (!isValid) return ValidationResult.Error("[red]Time invalid! Use the time format '[blue]HH:mm[/]'[/]");
+
+                if (time.Ticks < 0) return ValidationResult.Error("[red]Negative time not allowed.[/]");
+
+                return ValidationResult.Success();
+            }));
+
+        if (startInput == "0") return null!;
+
+        return startInput;
+    }
+
+    internal static int GetId()
+    {
+        string numberId = AnsiConsole.Ask<string>("\nPlease enter the ID of the session you want to update. You type [yellow]0 to return to main menu.[/]\n");
+
+        if (numberId == "0") return 0;
+
+        // Validate that the input is a positive integer or zero (to return to main menu)
+        while (!Int32.TryParse(numberId, out _) || Convert.ToInt32(numberId) < 0)
+        {
+            AnsiConsole.MarkupLine("[red]Invalid ID. Please enter a positive integer.[/]\n");
+            numberId = AnsiConsole.Ask<string>("Please enter the ID of the session you want to update. You type [yellow]0 to return to main menu.[/]\n");
+            if (numberId == "0") return 0;
+        }
+
+        int finalId = Convert.ToInt32(numberId);
+        return finalId;
     }
 }
 
