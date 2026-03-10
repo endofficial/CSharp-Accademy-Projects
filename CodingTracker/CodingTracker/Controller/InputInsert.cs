@@ -8,7 +8,6 @@ internal class InputInsert
 {
     internal static string GetDateSessionInput()
     {
-        AnsiConsole.MarkupLine("[Aquamarine3]Register a new session.[/]\n");
         var date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n");
 
         if (date == "0") return "0";
@@ -106,6 +105,35 @@ internal class InputInsert
         if (startInput == "0") return null!;
 
         return startInput;
+    }
+
+    internal static string OnlyEndTime()
+    {
+        string[] formats = { @"h\:mm", @"hh\:mm" };
+        string endInput = AnsiConsole.Prompt(
+            new TextPrompt<string>("[bold]\nPlease insert the end time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
+            .Validate(input =>
+            {
+                if (input == "0") return ValidationResult.Success();
+
+                bool isValid = TimeSpan.TryParseExact(input, formats, CultureInfo.InvariantCulture, out var time);
+
+                // Check if the time is valid and within the range of 0 to 24 hours
+                if (!isValid) return ValidationResult.Error("[red]Time invalid! Use the time format '[blue]hh:mm[/]'[/]");
+
+                if (time.Ticks < 0) return ValidationResult.Error("[red]Negative time not allowed.[/]");
+
+                return ValidationResult.Success();
+            }));
+        if (endInput == "0") return null!;
+
+        return endInput;
+    }
+
+    internal static string OnlyDescription()
+    {
+        string description = AnsiConsole.Ask<string>("\nPlease enter a description for the session. You can leave it empty if you want.\n");
+        return description;
     }
 
     internal static int GetId()

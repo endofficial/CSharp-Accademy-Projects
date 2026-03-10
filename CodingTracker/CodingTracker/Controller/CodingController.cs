@@ -14,6 +14,8 @@ internal class CodingController : Database
     {
         Clear();
 
+        AnsiConsole.MarkupLine("[Aquamarine3]Register a new session.[/]\n");
+
         string dateSession = InputInsert.GetDateSessionInput();
         if (dateSession == "0") return false;
 
@@ -153,6 +155,48 @@ internal class CodingController : Database
                     UPDATE CodingSessions SET StartTime = @StartTime WHERE Id = @Id";
 
                 connection.ExecuteScalar(sqlUpStartTime, new { Id = NumberId, StartTime = startTime });
+
+                AnsiConsole.MarkupLine("\n[green]Start time updated successfully![/]");
+                AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
+                Console.ReadKey();
+                break;
+            case "2":
+                string endTime = InputInsert.OnlyEndTime();
+                if (endTime == "0") return false;
+
+                string sqlUpEndTime = @"
+                    UPDATE CodingSessions SET EndTime = @EndTime WHERE Id = @Id";
+
+                connection.ExecuteScalar(sqlUpEndTime, new { Id = NumberId, EndTime = endTime });
+
+                AnsiConsole.MarkupLine("\n[green]End time updated successfully![/]");
+                AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
+                Console.ReadKey();
+                break;
+            case "3":
+                string Date = InputInsert.GetDateSessionInput();
+                if (Date == "0") return false;
+
+                string sqlUpDate = @"
+                    UPDATE CodingSessions SET Date = @Date WHERE Id = @Id";
+
+                connection.ExecuteScalar(sqlUpDate, new { Id = NumberId, Date = Date });
+
+                AnsiConsole.MarkupLine("\n[green]Date updated successfully![/]");
+                AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
+                Console.ReadKey();
+                break;
+            case "4":
+                string Description = InputInsert.OnlyDescription();
+
+                string sqlUpDescription = @"
+                    UPDATE CodingSessions SET Description = @Description WHERE Id = @Id";
+
+                connection.ExecuteScalar(sqlUpDescription, new { Id = NumberId, Description = Description });
+
+                AnsiConsole.MarkupLine("\n[green]Description updated successfully![/]");
+                AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
+                Console.ReadKey();
                 break;
         }
 
