@@ -77,7 +77,7 @@ internal class InputInsert
         session.DisplayConfirmRegister();
 
         AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-        Console.ReadKey();
+        ReadKey();
 
         return session;
     }
@@ -138,7 +138,7 @@ internal class InputInsert
 
     internal static int GetId()
     {
-        string numberId = AnsiConsole.Ask<string>("\nPlease enter the ID of the session you want to update. You type [yellow]0 to return to main menu.[/]\n");
+        string numberId = AnsiConsole.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n");
 
         if (numberId == "0") return 0;
 
@@ -146,7 +146,7 @@ internal class InputInsert
         while (!Int32.TryParse(numberId, out _) || Convert.ToInt32(numberId) < 0)
         {
             AnsiConsole.MarkupLine("[red]Invalid ID. Please enter a positive integer.[/]\n");
-            numberId = AnsiConsole.Ask<string>("Please enter the ID of the session you want to update. You type [yellow]0 to return to main menu.[/]\n");
+            numberId = AnsiConsole.Ask<string>("Please enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n");
             if (numberId == "0") return 0;
         }
 

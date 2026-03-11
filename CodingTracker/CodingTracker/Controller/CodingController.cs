@@ -138,7 +138,7 @@ internal class CodingController : Database
         string upInput = AnsiConsole.Ask<string>("\n[bold]Type 1 if you want update the start time.\nType 2 to update the end time.\nType 3 to update the date.\nType 4 to update the description.\n[/][yellow]Type 0 to return to main menu.[/]");
         if (upInput == "0") return false;
 
-        while (!Int32.TryParse(upInput, out _) || Convert.ToInt32(upInput) < 0)
+        while (!Int32.TryParse(upInput, out _) || Convert.ToInt32(upInput) < 0 || Convert.ToInt32(upInput) > 4)
         {
             AnsiConsole.MarkupLine("[red]Invalid input! Please enter a valid number.[/]\n");
             upInput = AnsiConsole.Ask<string>("\n[bold]Type 1 if you want update the start time.\nType 2 to update the end time.\nType 3 to update the date.\nType 4 to update the description.\n[/][yellow]Type 0 to return to main menu.[/]");
@@ -158,7 +158,7 @@ internal class CodingController : Database
 
                 AnsiConsole.MarkupLine("\n[green]Start time updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-                Console.ReadKey();
+                ReadKey();
                 break;
             case "2":
                 string endTime = InputInsert.OnlyEndTime();
@@ -171,7 +171,7 @@ internal class CodingController : Database
 
                 AnsiConsole.MarkupLine("\n[green]End time updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-                Console.ReadKey();
+                ReadKey();
                 break;
             case "3":
                 string Date = InputInsert.GetDateSessionInput();
@@ -184,7 +184,7 @@ internal class CodingController : Database
 
                 AnsiConsole.MarkupLine("\n[green]Date updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-                Console.ReadKey();
+                ReadKey();
                 break;
             case "4":
                 string Description = InputInsert.OnlyDescription();
@@ -196,7 +196,95 @@ internal class CodingController : Database
 
                 AnsiConsole.MarkupLine("\n[green]Description updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-                Console.ReadKey();
+                ReadKey();
+                break;
+        }
+
+        return true;
+    }
+
+    public static bool DeleteSession()
+    {
+        Clear();
+
+        AnsiConsole.MarkupLine("[Aquamarine3]Delete a session.[/]\n");
+
+        using var connection = GetConnection();
+
+        string sql = @"
+            SELECT * FROM CodingSessions";
+
+        List<CodingSessions> tableData = new List<CodingSessions>();
+
+        var sessions = connection.Query<CodingSessions>(sql).ToList(); // Execute the query and map results to CodingSessions objects
+
+        if (sessions.Count == 0)
+            {
+            AnsiConsole.MarkupLine("[red]No sessions found![/]");
+            AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
+            ReadKey();
+            return false;
+        }
+
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+
+        table.AddColumn("[yellow]ID[/]");
+        table.AddColumn("[yellow]Start Time[/]");
+        table.AddColumn("[yellow]End Time[/]");
+        table.AddColumn("[yellow]Date[/]");
+        table.AddColumn("[yellow]Duration[/]");
+        table.AddColumn("[yellow]Description[/]");
+
+        foreach (var session in sessions)
+        {
+            table.AddRow(
+                session.Id.ToString(),
+                session.StartTime.ToString("HH:mm"),
+                session.EndTime.ToString("HH:mm"),
+                session.Date,
+                session.Duration.ToString(@"hh\:mm"),
+                (session.Description ?? "Empty").ToString()
+                );
+        }
+
+        AnsiConsole.Write(table);
+
+        string delInput = AnsiConsole.Ask<string>("\n[bold]Type 1 if you want delete all sessions.\nType 2 if you want delete a session.\n[/][yellow]Type 0 to return to main menu.[/]");
+        if (delInput == "0") return false;
+
+        while (!Int32.TryParse(delInput, out _) || Convert.ToInt32(delInput) < 0 || Convert.ToInt32(delInput) > 2)
+        {
+            AnsiConsole.MarkupLine("[red]Invalid input! Please enter a valid number.[/]\n");
+            delInput = AnsiConsole.Ask<string>("\n[bold]Type 1 if you want delete all sessions.\nType 2 if you want delete a session.\n[/][yellow]Type 0 to return to main menu.[/]");
+            if (delInput == "0") return false;
+        }
+
+        switch (delInput)
+        {
+            case "1":
+                string sqlDelAll = @"
+                    DELETE FROM CodingSessions";
+
+                connection.Execute(sqlDelAll);
+
+                AnsiConsole.MarkupLine("[red]\nAll sessions deleted![/]");
+                AnsiConsole.MarkupLine("[yellow]\nPress any key to continue...[/]");
+                ReadKey();
+
+                break;
+            case "2":
+                int delId = InputInsert.GetId();    
+                if (delId == 0) return false;
+
+                string sqlDelSession = @"
+                    DELETE FROM CodingSessions WHERE Id = @Id";
+
+                connection.Execute(sqlDelSession, new { Id = delId });
+
+                AnsiConsole.MarkupLine("\n[red]\nSession deleted![/]");
+                AnsiConsole.MarkupLine("[yellow]\nPress any key to continue...[/]");
+                ReadKey();
                 break;
         }
 

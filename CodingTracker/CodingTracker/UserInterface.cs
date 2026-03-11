@@ -36,6 +36,7 @@ internal class UserInterface
                     CodingController.UpdateSession();
                     break;
                 case MenuAction.DeleteSession:
+                    CodingController.DeleteSession();
                     break;
                 case MenuAction.ViewSessions:
                     CodingController.ViewSessions();
