@@ -311,7 +311,7 @@ internal class CodingController : Database
 
                 connection.Execute(sqlDelSession, new { Id = delId });
 
-                AnsiConsole.MarkupLine("\n[red]\nSession deleted![/]");
+                AnsiConsole.MarkupLine("[red]\nSession deleted![/]");
                 AnsiConsole.MarkupLine("[yellow]\nPress any key to continue...[/]");
                 ReadKey();
                 break;
