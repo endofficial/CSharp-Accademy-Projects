@@ -1,11 +1,67 @@
 ﻿using CodingTracker.Model;
 using Spectre.Console;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace CodingTracker.Controller;
 
 internal class InputInsert
 {
+    internal static CodingSessions StopwatchSession(string sessionDate)
+    {
+        Clear();
+        string description = AnsiConsole.Ask<string>("Please enter a description for the session. You can leave it empty if you want.");
+
+        AnsiConsole.MarkupLine("\n[green]Session started![/]");
+
+        var stopwatch = Stopwatch.StartNew(); //initialize to use a stopwatch
+        DateTime startTime = DateTime.Now;
+
+        // Display a status message while the session is in progress
+        // .status make a status message that can be updated while the session is running,
+        // and .spinner adds a spinner animation to indicate that something is happening in the background.
+        AnsiConsole.Status()
+            .Spinner(Spinner.Known.Clock)
+            .Start("Live session in progress...", ctx =>
+            {
+                stopwatch.Start(); // Start the stopwatch 
+
+                while (!KeyAvailable)
+                {
+                    var elapsed = stopwatch.Elapsed; // Get the elapsed time since the session started
+
+                    string time = string.Format("{0:00}:{1:00}:{2:00}",
+                            elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
+
+                    // to update a message
+                    ctx.Status($"[blue]Stopwatch running:[/] {time}");
+
+                    // add a delay to safe CPU
+                    // Don't act fot 50ms => 20 FPS
+                    Thread.Sleep(50);
+
+                }
+                ReadKey(true);
+            });
+
+        stopwatch.Stop();
+
+        DateTime endTime = DateTime.Now;
+        TimeSpan duration = endTime - startTime;
+        string[] formatsTime = { "H\\:mm", "HH\\:mm" };
+
+        TimeOnly StartTime  = TimeOnly.FromDateTime(startTime);
+        TimeOnly EndTime = TimeOnly.FromDateTime(endTime);
+
+        var session = new CodingSessions(0, StartTime, EndTime, sessionDate, duration, description);
+
+        Clear();
+        AnsiConsole.MarkupLine("[red]Session stopped![/]\n[yellow]Press any key to continue...[/]");
+        ReadKey();
+
+        return session;
+    }
+
     internal static string GetDateSessionInput()
     {
         var date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n");
@@ -18,6 +74,8 @@ internal class InputInsert
             date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]");
             if (date == "0") return "0";
         }
+
+        AnsiConsole.MarkupLine($"[green]Date registered![/]");
         return date;
     }
 

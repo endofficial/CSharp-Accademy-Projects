@@ -18,6 +18,7 @@ internal class UserInterface
             .Title("What do you want to do next?")
             .UseConverter(option => option switch // UseConverter is used to convert the enum values to user-friendly strings in the selection prompt
             {
+                MenuAction.LiveSession => "Start a live coding session",
                 MenuAction.RegisterSession => "Register a coding session",
                 MenuAction.UpdateSession => "Update a coding session",
                 MenuAction.DeleteSession => "Delete a coding session",
@@ -29,6 +30,9 @@ internal class UserInterface
 
             switch (actionChoice)
             {
+                case MenuAction.LiveSession:
+                    CodingController.LiveSession();
+                    break;
                 case MenuAction.RegisterSession:
                     CodingController.RegisterSession();
                     break;

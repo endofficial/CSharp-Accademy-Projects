@@ -5,11 +5,40 @@ using Microsoft.Data.Sqlite;
 using CodingTracker.Data;
 using System.Data.SQLite;
 using CodingTracker.Model;
+using System.Diagnostics;
 
 namespace CodingTracker.Controller;
 
 internal class CodingController : Database
 {
+    public static bool LiveSession()
+    {
+        Clear();
+        AnsiConsole.MarkupLine("[Aquamarine3]Start a live coding session.\n[/]");
+
+        string dateSession = InputInsert.GetDateSessionInput();
+        if (dateSession == "0") return false;
+
+        string input = AnsiConsole.Ask<string>("[bold]\nPress 'P' to start the session.[/][yellow]Type 0 to return to main menu.[/]");
+        if (input.ToUpper() == "P")
+        {
+            var durationSession = InputInsert.StopwatchSession(dateSession);
+
+            if (durationSession != null)
+            {
+                using var connection = GetConnection();
+
+                string sql = @"
+                    INSERT INTO CodingSessions (StartTime, EndTime, Date, Duration, Description)
+                    VALUES (@StartTime, @EndTime, @Date, @Duration, @Description)";
+
+                connection.Execute(sql, durationSession);
+            }
+        }
+        
+        return true;
+    }
+
     public static bool RegisterSession()
     {
         Clear();
@@ -28,7 +57,7 @@ internal class CodingController : Database
 
             string sql = @"
                 INSERT INTO CodingSessions (StartTime, EndTime, Date, Duration, Description)
-                VALUES (@StartTime, @EndTime, @Date, @Duration, @Description);";
+                VALUES (@StartTime, @EndTime, @Date, @Duration, @Description)";
 
             connection.Execute(sql, durationSession);
         }
@@ -219,7 +248,7 @@ internal class CodingController : Database
         var sessions = connection.Query<CodingSessions>(sql).ToList(); // Execute the query and map results to CodingSessions objects
 
         if (sessions.Count == 0)
-            {
+        {
             AnsiConsole.MarkupLine("[red]No sessions found![/]");
             AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
             ReadKey();
@@ -274,7 +303,7 @@ internal class CodingController : Database
 
                 break;
             case "2":
-                int delId = InputInsert.GetId();    
+                int delId = InputInsert.GetId();
                 if (delId == 0) return false;
 
                 string sqlDelSession = @"
