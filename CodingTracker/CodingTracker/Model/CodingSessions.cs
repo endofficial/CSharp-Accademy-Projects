@@ -4,7 +4,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker.Model;
 
-internal class CodingSessions
+public class CodingSessions
 {
     public int Id { get; set; }
     public TimeOnly StartTime { get; set; }

@@ -5,12 +5,12 @@ using System.Globalization;
 
 namespace CodingTracker.Controller;
 
-internal class InputInsert
+public class InputInsert
 {
-    internal static CodingSessions StopwatchSession(string sessionDate)
+    public static CodingSessions StopwatchSession(string sessionDate)
     {
         Clear();
-        string description = AnsiConsole.Ask<string>("Please enter a description for the session. You can leave it empty if you want.");
+        string description = AnsiConsole.Ask<string>("Please enter a description for the session.");
 
         AnsiConsole.MarkupLine("\n[green]Session started![/]");
 
@@ -62,32 +62,37 @@ internal class InputInsert
         return session;
     }
 
-    internal static string GetDateSessionInput()
+    // IAnsiConsole is used to test with spectre.console.testing
+    public static string GetDateSessionInput(IAnsiConsole? console = null)
     {
-        var date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n");
+        var _console = console ?? AnsiConsole.Console;
 
+        var date = _console.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n").Trim();
         if (date == "0") return "0";
 
-        while (!DateTime.TryParseExact(date, "yyyy-MM-dd", new CultureInfo("en-EN"), DateTimeStyles.None, out _))
+        while (!DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
         {
-            AnsiConsole.MarkupLine("[red]Invalid date format.[/]\n");
-            date = AnsiConsole.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]");
+            _console.MarkupLine("[red]Invalid date format.[/]\n");
+            date = _console.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.\n[/]").Trim();
             if (date == "0") return "0";
         }
 
-        AnsiConsole.MarkupLine($"[green]Date registered![/]");
+        _console.MarkupLine($"[green]Date registered![/]");
         return date;
     }
 
-    internal static CodingSessions? GetTimeSessionInput(string sessionDate)
+    public static CodingSessions? GetTimeSessionInput(string sessionDate, IAnsiConsole console = null)
     {
-        string[] formats = { @"h\:mm", @"hh\:mm" };
-        string description = AnsiConsole.Ask<string>("Please enter a description for the session. You can leave it empty if you want.");
+        var _console = console ?? AnsiConsole.Console;
 
-        string startInput = AnsiConsole.Prompt(
+        string[] formats = { @"h\:mm", @"hh\:mm" };
+        string description = _console.Ask<string>("Please enter a description for the session.");
+
+        string startInput = _console.Prompt(
             new TextPrompt<string>("[bold]\nPlease insert the start time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
             .Validate(input =>
             {
+                var cleanInput = input.Trim();
                 if (input == "0") return ValidationResult.Success();
 
                 // if the format is valid, it will be stored in the variable time, otherwise it will return false
@@ -100,13 +105,13 @@ internal class InputInsert
 
                 return ValidationResult.Success();
             }));
-
         if (startInput == "0") return null!;
 
-        string endInput = AnsiConsole.Prompt(
+        string endInput = _console.Prompt(
             new TextPrompt<string>("[bold]\nPlease insert the end time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
             .Validate(input =>
             {
+                var cleanInputEnd = input.Trim();
                 if (input == "0") return ValidationResult.Success();
 
                 bool isValid = TimeSpan.TryParseExact(input, formats, CultureInfo.InvariantCulture, out var time);
@@ -134,13 +139,13 @@ internal class InputInsert
 
         session.DisplayConfirmRegister();
 
-        AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
-        ReadKey();
+        _console.MarkupLine("[yellow]Press any key to continue...[/]");
+        _console.Input.ReadKey(true);
 
         return session;
     }
 
-    internal static string OnlyStartTime()
+    public static string OnlyStartTime()
     {
         string[] formats = { @"h\:mm", @"hh\:mm" };
         string startInput = AnsiConsole.Prompt(
@@ -165,7 +170,7 @@ internal class InputInsert
         return startInput;
     }
 
-    internal static string OnlyEndTime()
+    public static string OnlyEndTime()
     {
         string[] formats = { @"h\:mm", @"hh\:mm" };
         string endInput = AnsiConsole.Prompt(
@@ -188,13 +193,13 @@ internal class InputInsert
         return endInput;
     }
 
-    internal static string OnlyDescription()
+    public static string OnlyDescription()
     {
-        string description = AnsiConsole.Ask<string>("\nPlease enter a description for the session. You can leave it empty if you want.\n");
+        string description = AnsiConsole.Ask<string>("\nPlease enter a description for the session.\n");
         return description;
     }
 
-    internal static int GetId()
+    public static int GetId()
     {
         string numberId = AnsiConsole.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n");
 

@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.13" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.13" />
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
+    <PackageReference Include="Spectre.Console.Testing" Version="0.54.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 
