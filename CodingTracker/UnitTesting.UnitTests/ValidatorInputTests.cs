@@ -36,8 +36,6 @@ namespace UnitTesting.UnitTests
         [InlineData("Programming", "invalid\r21:00", "invalid\r22:00", 1, "21:00", "22:00")]
         [InlineData("Programming", " 21:00", " 22:00", 1, "21:00", "22:00")]
         [InlineData("Programming", "21:00 ", "22:00 ", 1, "21:00", "22:00")]
-
-        //non fuznionano i test con lo spazio
         public void CorrectTimeSessionInput_ReturnCorrectCodingSession(string description, string start, string end, int durationexpected, string startExp, string endExp)
         {
             // Arrange
@@ -57,6 +55,41 @@ namespace UnitTesting.UnitTests
             result.EndTime.ToString("HH:mm").Should().Be(endExp);
             result.Date.Should().Be("2026-12-25");
             result.Duration.TotalHours.Should().Be(durationexpected);
+        }
+
+        [Theory]
+        [InlineData("3", 3)]
+        [InlineData("invalid\r4", 4)]
+        [InlineData(" 4", 4)]
+        [InlineData("4 ", 4)]
+        [InlineData("0", 0)]
+        public void ReturnCorrectId(string inputId, int expected)
+        {
+            // Arrange
+            var console = new TestConsole();
+            console.Input.PushTextWithEnter(inputId);
+
+            // Act
+            var result = InputInsert.GetId(console);
+
+            // Assert
+            result.Should().Be(expected);
+
+        }
+
+        [Theory]
+        [InlineData("Working", "Working")]
+        public void ReturCorrectOnlyDescription(string inputDescription, string expected)
+        {
+            // Arrange
+            var console = new TestConsole();
+            console.Input.PushTextWithEnter(inputDescription);
+
+            // Act
+            var result = InputInsert.OnlyDescription(console);
+
+            // Assert
+            result.Should().Be(expected);
         }
     }
 

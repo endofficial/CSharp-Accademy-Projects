@@ -81,7 +81,7 @@ public class InputInsert
         return date;
     }
 
-    public static CodingSessions? GetTimeSessionInput(string sessionDate, IAnsiConsole console = null)
+    public static CodingSessions? GetTimeSessionInput(string sessionDate, IAnsiConsole? console = null)
     {
         var _console = console ?? AnsiConsole.Console;
 
@@ -93,10 +93,10 @@ public class InputInsert
             .Validate(input =>
             {
                 var cleanInput = input.Trim();
-                if (input == "0") return ValidationResult.Success();
+                if (cleanInput == "0") return ValidationResult.Success();
 
                 // if the format is valid, it will be stored in the variable time, otherwise it will return false
-                bool isValid = TimeSpan.TryParseExact(input, formats, CultureInfo.InvariantCulture, out var time);
+                bool isValid = TimeSpan.TryParseExact(cleanInput, formats, CultureInfo.InvariantCulture, out var time);
 
                 // Check if the time is valid and within the range of 0 to 24 hours
                 if (!isValid) return ValidationResult.Error("[red]Time invalid! Use the time format '[blue]HH:mm[/]'[/]");
@@ -105,16 +105,16 @@ public class InputInsert
 
                 return ValidationResult.Success();
             }));
-        if (startInput == "0") return null!;
+        if (startInput.Trim() == "0") return null!;
 
         string endInput = _console.Prompt(
             new TextPrompt<string>("[bold]\nPlease insert the end time (Format: [green]HH:mm[/]) or type [yellow]0[/] to return to main menu.[/]")
             .Validate(input =>
             {
                 var cleanInputEnd = input.Trim();
-                if (input == "0") return ValidationResult.Success();
+                if (cleanInputEnd == "0") return ValidationResult.Success();
 
-                bool isValid = TimeSpan.TryParseExact(input, formats, CultureInfo.InvariantCulture, out var time);
+                bool isValid = TimeSpan.TryParseExact(cleanInputEnd, formats, CultureInfo.InvariantCulture, out var time);
 
                 // Check if the time is valid and within the range of 0 to 24 hours
                 if (!isValid) return ValidationResult.Error("[red]Time invalid! Use the time format '[blue]hh:mm[/]'[/]");
@@ -123,14 +123,14 @@ public class InputInsert
 
                 return ValidationResult.Success();
             }));
-        if (endInput == "0") return null!;
+        if (endInput.Trim() == "0") return null!;
 
         // Define another because DateTime.TryParseExact doesn't accept TimeSpan formats, it needs to be converted to DateTime
         string[] formatsTime = { "H\\:mm", "HH\\:mm" };
         // convert string to DateTime
-        if (!TimeOnly.TryParseExact(startInput, formatsTime, null!, DateTimeStyles.None, out TimeOnly resultStart)) return null!;
+        if (!TimeOnly.TryParseExact(startInput.Trim(), formatsTime, null!, DateTimeStyles.None, out TimeOnly resultStart)) return null!;
 
-        if (!TimeOnly.TryParseExact(endInput, formatsTime, null!, DateTimeStyles.None, out TimeOnly resultEnd)) return null!;
+        if (!TimeOnly.TryParseExact(endInput.Trim(), formatsTime, null!, DateTimeStyles.None, out TimeOnly resultEnd)) return null!;
 
         // calculate duration
         TimeSpan duration = resultEnd - resultStart;
@@ -193,23 +193,27 @@ public class InputInsert
         return endInput;
     }
 
-    public static string OnlyDescription()
+    public static string OnlyDescription(IAnsiConsole? console = null)
     {
-        string description = AnsiConsole.Ask<string>("\nPlease enter a description for the session.\n");
+        var _console = console ?? AnsiConsole.Console;
+
+        string description = _console.Ask<string>("\nPlease enter a description for the session.\n");
         return description;
     }
 
-    public static int GetId()
+    public static int GetId(IAnsiConsole? console = null)
     {
-        string numberId = AnsiConsole.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n");
+        var _console = console ?? AnsiConsole.Console;
+
+        string numberId = _console.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n").Trim();
 
         if (numberId == "0") return 0;
 
         // Validate that the input is a positive integer or zero (to return to main menu)
         while (!Int32.TryParse(numberId, out _) || Convert.ToInt32(numberId) < 0)
         {
-            AnsiConsole.MarkupLine("[red]Invalid ID. Please enter a positive integer.[/]\n");
-            numberId = AnsiConsole.Ask<string>("Please enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n");
+            _console.MarkupLine("[red]Invalid ID. Please enter a positive integer.[/]\n");
+            numberId = _console.Ask<string>("Please enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n").Trim();
             if (numberId == "0") return 0;
         }
 
