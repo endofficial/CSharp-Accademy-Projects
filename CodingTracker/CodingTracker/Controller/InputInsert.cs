@@ -226,16 +226,21 @@ public class InputInsert
         Random random = new Random();
 
         List<CodingSessions> codSession = new List<CodingSessions>();
+        string[] Description = { "Working", "Programming", "Playing" };
+
+        DateTime start = new DateTime(2020, 1, 1);
+        int range = (DateTime.Today - start).Days;
 
         for(int i = 0; i < 20; i++)
         {
             var randomStart = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
             var randomEnd = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
-            string randomDate = DateTime.Now.AddDays(-random.Next(0, 31)).ToString("yyyy-MM-dd");
-
+            string randomDate = start.AddDays(random.Next(range)).ToString("yyyy-MM-dd");
+            
             TimeSpan duration = randomEnd - randomStart;
 
-            string description = "Working";
+            int desRandom = random.Next(0, Description.Length);
+            string description = Description[desRandom];
 
             var session = new CodingSessions(0, randomStart, randomEnd, randomDate, duration, description);
             codSession.Add(session);
