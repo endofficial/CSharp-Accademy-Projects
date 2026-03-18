@@ -221,21 +221,27 @@ public class InputInsert
         return finalId;
     }
 
-    public static CodingSessions? RandomSession()
+    public static List<CodingSessions> RandomSession()
     {
         Random random = new Random();
 
-        var randomStart = new TimeOnly(random.Next(0, 24), random.Next(0, 60)); 
-        var randomEnd = new TimeOnly(random.Next(0, 24), random.Next(0, 60));
-        string randomDate = DateTime.Now.AddDays(-random.Next(0, 31)).ToString("yyyy-MM-dd");
+        List<CodingSessions> codSession = new List<CodingSessions>();
+
+        for(int i = 0; i < 20; i++)
+        {
+            var randomStart = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
+            var randomEnd = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
+            string randomDate = DateTime.Now.AddDays(-random.Next(0, 31)).ToString("yyyy-MM-dd");
+
+            TimeSpan duration = randomEnd - randomStart;
+
+            string description = "Working";
+
+            var session = new CodingSessions(0, randomStart, randomEnd, randomDate, duration, description);
+            codSession.Add(session);
+        }
         
-        TimeSpan duration = randomEnd - randomStart;
-
-        string description = "Working";
-
-        var session = new CodingSessions(0, randomStart, randomEnd, randomDate, duration, description);
-
-        return session;
+        return codSession;
     }
 }
 
