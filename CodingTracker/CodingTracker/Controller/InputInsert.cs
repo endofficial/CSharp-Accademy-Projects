@@ -220,5 +220,22 @@ public class InputInsert
         int finalId = Convert.ToInt32(numberId);
         return finalId;
     }
+
+    public static CodingSessions? RandomSession()
+    {
+        Random random = new Random();
+
+        var randomStart = new TimeOnly(random.Next(0, 24), random.Next(0, 60)); 
+        var randomEnd = new TimeOnly(random.Next(0, 24), random.Next(0, 60));
+        string randomDate = DateTime.Now.AddDays(-random.Next(0, 31)).ToString("yyyy-MM-dd");
+        
+        TimeSpan duration = randomEnd - randomStart;
+
+        string description = "Working";
+
+        var session = new CodingSessions(0, randomStart, randomEnd, randomDate, duration, description);
+
+        return session;
+    }
 }
 

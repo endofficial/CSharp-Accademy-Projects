@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Data;
+using CodingTracker.Controller;
 using Dapper;
 
 namespace CodingTracker
@@ -11,6 +12,9 @@ namespace CodingTracker
 
             Database database = new();
             database.Initialize();
+
+            RandomValues values = new RandomValues();
+            values.ValueRandom();
 
             UserInterface ui = new();
             ui.MainMenu();
