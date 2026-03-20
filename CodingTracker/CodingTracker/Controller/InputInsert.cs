@@ -2,6 +2,7 @@
 using Spectre.Console;
 using System.Diagnostics;
 using System.Globalization;
+using static CodingTracker.Enums;
 
 namespace CodingTracker.Controller;
 
@@ -231,7 +232,7 @@ public class InputInsert
         DateTime start = new DateTime(2020, 1, 1);
         int range = (DateTime.Today - start).Days;
 
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 100; i++)
         {
             var randomStart = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
             var randomEnd = new TimeOnly(random.Next(0, 24), random.Next(0, 60), random.Next(0, 59));
@@ -247,6 +248,49 @@ public class InputInsert
         }
         
         return codSession;
+    }
+
+    public static FilterAction OrderSession()
+    {
+        Clear();
+
+        var filterChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<FilterAction>()
+            .Title("How do you want to visualize the data?")
+            .UseConverter(option => option switch
+            {
+                FilterAction.orderToYears => "Order to year",
+                FilterAction.orderToMonths => "Order to month",
+                FilterAction.orderToDays => "Order to day",
+                FilterAction.ascendingOrder => "Ascending order",
+                FilterAction.descendingOrder => "Descending order",
+                FilterAction.Exit => "[red]Close App[/]",
+                _ => option.ToString()
+            })
+            .AddChoices(Enum.GetValues<FilterAction>()));
+
+        switch (filterChoice)
+        {
+            case FilterAction.orderToYears:
+                CodingFilterOrder.OrderToYears();
+                break;
+            case FilterAction.orderToMonths:
+                CodingFilterOrder.OrderToMonths();
+                break;
+            case FilterAction.orderToDays:
+                CodingFilterOrder.OrderToDays();
+                break;
+            case FilterAction.ascendingOrder:
+                CodingFilterOrder.AscendingOrder();
+                break;
+            case FilterAction.descendingOrder:
+                CodingFilterOrder.DescendingOrder();
+                break;
+            case FilterAction.Exit:
+                break;
+        }
+
+        return filterChoice;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Data;
 using CodingTracker.Controller;
 using Dapper;
+using Spectre.Console;
 
 namespace CodingTracker
 {

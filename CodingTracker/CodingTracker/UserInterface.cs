@@ -12,7 +12,7 @@ internal class UserInterface
 
         while (!closeApp)
         {
-            Clear();
+            AnsiConsole.Clear();
             var actionChoice = AnsiConsole.Prompt(
             new SelectionPrompt<MenuAction>()
             .Title("What do you want to do next?")

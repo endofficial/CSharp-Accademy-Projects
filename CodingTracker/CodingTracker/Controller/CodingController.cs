@@ -13,7 +13,7 @@ internal class CodingController : Database
 {
     public static bool LiveSession()
     {
-        Clear();
+        AnsiConsole.Clear();
         AnsiConsole.MarkupLine("[Aquamarine3]Start a live coding session.\n[/]");
 
         string dateSession = InputInsert.GetDateSessionInput();
@@ -41,7 +41,7 @@ internal class CodingController : Database
 
     public static bool RegisterSession()
     {
-        Clear();
+        AnsiConsole.Clear();
 
         AnsiConsole.MarkupLine("[Aquamarine3]Register a new session.[/]\n");
 
@@ -67,14 +67,12 @@ internal class CodingController : Database
 
     public static bool ViewSessions()
     {
-        Clear();
+        AnsiConsole.Clear();
 
         using var connection = GetConnection();
 
         string sql = @"
             SELECT * FROM CodingSessions";
-
-        List<CodingSessions> tableData = new List<CodingSessions>();
 
         var sessions = connection.Query<CodingSessions>(sql).ToList(); // Execute the query and map results to CodingSessions objects
 
@@ -101,6 +99,11 @@ internal class CodingController : Database
         }
 
         AnsiConsole.Write(table);
+        var action = AnsiConsole.Ask<string>("[yellow]Press 'T' to order records or press '0' to return to main menu.[/]").Trim().ToUpper();
+
+        if (action == "0") return false;
+        else InputInsert.OrderSession();
+
         AnsiConsole.MarkupLine("\n[yellow]Press any key to continue...[/]");
         Console.ReadKey();
 
@@ -109,7 +112,7 @@ internal class CodingController : Database
 
     public static bool UpdateSession()
     {
-        Clear();
+        AnsiConsole.Clear();
 
         AnsiConsole.MarkupLine("[Aquamarine3]Update a session.[/]\n");
 
@@ -234,7 +237,7 @@ internal class CodingController : Database
 
     public static bool DeleteSession()
     {
-        Clear();
+        AnsiConsole.Clear();
 
         AnsiConsole.MarkupLine("[Aquamarine3]Delete a session.[/]\n");
 

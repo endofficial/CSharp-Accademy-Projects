@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Data.Sqlite;    
+﻿using CodingTracker.Model;
 using Dapper;
-using CodingTracker.Model;
+using Microsoft.Data.Sqlite;    
+using Microsoft.Extensions.Configuration;
+using Spectre.Console;
 using System.Runtime.InteropServices.Marshalling;
 
 namespace CodingTracker.Data;
@@ -29,19 +30,31 @@ internal class Database
 
     public void Initialize()
     {
-        using var connection = GetConnection();
+        AnsiConsole.Status()
+            .Start("Database initialization...", ctx =>
+            {
+                using var connection = GetConnection();
 
-        string sql = @"
-            CREATE TABLE IF NOT EXISTS CodingSessions (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                StartTime TEXT NOT NULL,
-                EndTime TEXT NOT NULL,
-                Duration TEXT NOT NULL,
-                Date TEXT NOT NULL,
-                Description TEXT
-            );";
+                string sql = @"
+                CREATE TABLE IF NOT EXISTS CodingSessions (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    StartTime TEXT NOT NULL,
+                    EndTime TEXT NOT NULL,
+                    Duration TEXT NOT NULL,
+                    Date TEXT NOT NULL,
+                    Description TEXT
+                );";
 
-        connection.Execute(sql);
+                connection.Execute(sql);
+
+                Thread.Sleep(2000);
+
+                ctx.Status("Loading session...");
+                ctx.Spinner(Spinner.Known.Clock);
+                ctx.SpinnerStyle(Style.Parse("yellow"));
+
+                Thread.Sleep(2000);
+            });
     }
 }
 

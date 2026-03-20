@@ -1,6 +1,6 @@
 ﻿namespace CodingTracker;
 
-internal class Enums
+public class Enums
 {
     internal enum MenuAction
     {
@@ -10,6 +10,16 @@ internal class Enums
         UpdateSession,
         DeleteSession,
         ExiSession
+    }
+
+    public enum FilterAction
+    {
+        orderToYears,
+        orderToMonths,
+        orderToDays,
+        ascendingOrder,
+        descendingOrder,
+        Exit
     }
 }
 
