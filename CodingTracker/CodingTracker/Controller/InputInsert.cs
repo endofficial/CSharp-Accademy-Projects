@@ -14,6 +14,7 @@ public class InputInsert
         string description = AnsiConsole.Ask<string>("Please enter a description for the session.");
 
         AnsiConsole.MarkupLine("\n[green]Session started![/]");
+        AnsiConsole.MarkupLine("\n[yellow]Press any key to stop session.[/]");
 
         var stopwatch = Stopwatch.StartNew(); //initialize to use a stopwatch
         DateTime startTime = DateTime.Now;
@@ -42,7 +43,6 @@ public class InputInsert
                     Thread.Sleep(50);
 
                 }
-                AnsiConsole.MarkupLine("Press any key to stop session.");
                 ReadKey(true);
             });
 
@@ -79,7 +79,7 @@ public class InputInsert
             if (date == "0") return "0";
         }
 
-        _console.MarkupLine($"[green]Date registered![/]");
+        _console.MarkupLine($"[green]Date registered!\n[/]");
         return date;
     }
 
@@ -207,7 +207,7 @@ public class InputInsert
     {
         var _console = console ?? AnsiConsole.Console;
 
-        string numberId = _console.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n").Trim();
+        string numberId = _console.Ask<string>("\nPlease enter the ID of the session. You type [yellow]0 to return to main menu.\n[/]").Trim();
 
         if (numberId == "0") return 0;
 
@@ -215,7 +215,7 @@ public class InputInsert
         while (!Int32.TryParse(numberId, out _) || Convert.ToInt32(numberId) < 0)
         {
             _console.MarkupLine("[red]Invalid ID. Please enter a positive integer.[/]\n");
-            numberId = _console.Ask<string>("Please enter the ID of the session. You type [yellow]0 to return to main menu.[/]\n").Trim();
+            numberId = _console.Ask<string>("Please enter the ID of the session. You type [yellow]0 to return to main menu.\n[/]").Trim();
             if (numberId == "0") return 0;
         }
 

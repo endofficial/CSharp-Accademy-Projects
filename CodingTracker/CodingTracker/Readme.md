@@ -72,3 +72,10 @@ Questa applicazione rispetta l'acronimo CRUD (Create, Read, Update e Delete).
 	- ***Eliminare tutto il database***: Scegliendo l'opzione '1', verrà cancellato l'intero database.
 	- ***Scegliere database da eliminare***: Scegliendo '2', dovrà essere indicato un id corrispondente alla sessione che si vuole eliminare.
 		- <img src="Resources\doc\images\allsessiontodelete.png" alt="option to delete one session" width="500">
+
+## What I learned
+
+- Integrazione del database: Ho imparato come creare, connettere e comunicare con un database con Dapper.
+- Integrazione di un cronometro: Ho imparato come implementare correttamente il metodo StopWatch per la sessione live.
+- Problem solving: Ho avuto difficoltà ad implementare i filtri per visualizzare il database. Ho risolto con un'approfondita ricerca nel web. Ho capito la funzione di 'strftime' che serve a formattare date e orari trasformandoli in stringhe di testo leggibili e personalizzate.
+- Unit testing: Ho implementato dei test unitari per verificare il corretto funzionamento di alcuni metodi.

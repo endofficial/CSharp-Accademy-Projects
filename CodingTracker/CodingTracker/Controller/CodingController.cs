@@ -159,7 +159,7 @@ internal class CodingController : Database
 
         while (!exists)
         {
-            AnsiConsole.MarkupLine("[red]Record not found![/]\n");
+            AnsiConsole.MarkupLine("[red]\nRecord not found![/]\n");
 
             NumberId = InputInsert.GetId();
             if (NumberId == 0) return false;
@@ -172,7 +172,7 @@ internal class CodingController : Database
 
         while (!Int32.TryParse(upInput, out _) || Convert.ToInt32(upInput) < 0 || Convert.ToInt32(upInput) > 4)
         {
-            AnsiConsole.MarkupLine("[red]Invalid input! Please enter a valid number.[/]\n");
+            AnsiConsole.MarkupLine("[red]\nInvalid input! Please enter a valid number.[/]\n");
             upInput = AnsiConsole.Ask<string>("\n[bold]Type 1 if you want update the start time.\nType 2 to update the end time.\nType 3 to update the date.\nType 4 to update the description.\n[/][yellow]Type 0 to return to main menu.[/]");
             if (upInput == "0") return false;
         }
@@ -188,7 +188,7 @@ internal class CodingController : Database
 
                 connection.ExecuteScalar(sqlUpStartTime, new { Id = NumberId, StartTime = startTime });
 
-                AnsiConsole.MarkupLine("\n[green]Start time updated successfully![/]");
+                AnsiConsole.MarkupLine("[green]\nStart time updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
                 ReadKey();
                 break;
@@ -201,7 +201,7 @@ internal class CodingController : Database
 
                 connection.ExecuteScalar(sqlUpEndTime, new { Id = NumberId, EndTime = endTime });
 
-                AnsiConsole.MarkupLine("\n[green]End time updated successfully![/]");
+                AnsiConsole.MarkupLine("[green]\nEnd time updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
                 ReadKey();
                 break;
@@ -214,7 +214,7 @@ internal class CodingController : Database
 
                 connection.ExecuteScalar(sqlUpDate, new { Id = NumberId, Date = Date });
 
-                AnsiConsole.MarkupLine("\n[green]Date updated successfully![/]");
+                AnsiConsole.MarkupLine("[green]\nDate updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
                 ReadKey();
                 break;
@@ -226,7 +226,7 @@ internal class CodingController : Database
 
                 connection.ExecuteScalar(sqlUpDescription, new { Id = NumberId, Description = Description });
 
-                AnsiConsole.MarkupLine("\n[green]Description updated successfully![/]");
+                AnsiConsole.MarkupLine("[green]\nDescription updated successfully![/]");
                 AnsiConsole.MarkupLine("[yellow]Press any key to continue...[/]");
                 ReadKey();
                 break;
