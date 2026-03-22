@@ -64,6 +64,7 @@ Questa applicazione rispetta l'acronimo CRUD (Create, Read, Update e Delete).
 - **Update session**
 	- ***Visualizzazione delle sessioni***: Viene mostrata una tabella con tutte le sessioni nel database.
 	- ***Cosa si vuole aggiornare?***: Viene mostrata una lista in cui l'utente può navigare per scegliere cosa vuole aggiornare.
+		
 		- <img src="Resources\doc\images\all-sessions-update.png" alt="view all sessions" width="500">
 
 - **Delete session**
