@@ -46,7 +46,7 @@ From the main menu, you can navigate the following features:
 		-	**Select and Delete a Specific Habit**: Remove a habit category and all its associated data.
 		-	**Menu Navigation**: Cancel the operation and return to the main menu.
 	
-- See all records
+- **See all records**
 	-	**View Records (Type '5')**: Display a complete list of all registered habits and logs.
 	-	<img src="../resources/doc/images/5.png" alt="See all habits" width="500">
 
