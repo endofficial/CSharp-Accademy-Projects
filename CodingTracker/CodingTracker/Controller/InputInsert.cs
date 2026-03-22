@@ -253,21 +253,21 @@ public class InputInsert
     public static FilterAction OrderSession()
     {
         Clear();
-
+ 
         var filterChoice = AnsiConsole.Prompt(
-            new SelectionPrompt<FilterAction>()
-            .Title("How do you want to visualize the data?")
-            .UseConverter(option => option switch
-            {
-                FilterAction.orderToYears => "Order to year",
-                FilterAction.orderToMonths => "Order to month",
-                FilterAction.orderToDays => "Order to day",
-                FilterAction.ascendingOrder => "Ascending order",
-                FilterAction.descendingOrder => "Descending order",
-                FilterAction.Exit => "[red]Close App[/]",
-                _ => option.ToString()
-            })
-            .AddChoices(Enum.GetValues<FilterAction>()));
+        new SelectionPrompt<FilterAction>()
+        .Title("How do you want to visualize the data?")
+        .UseConverter(option => option switch
+        {
+            FilterAction.orderToYears => "Order to year",
+            FilterAction.orderToMonths => "Order to month",
+            FilterAction.orderToDays => "Order to day",
+            FilterAction.ascendingOrder => "Ascending order",
+            FilterAction.descendingOrder => "Descending order",
+            FilterAction.Exit => "[red]Close App[/]",
+            _ => option.ToString()
+        })
+        .AddChoices(Enum.GetValues<FilterAction>()));
 
         switch (filterChoice)
         {
@@ -287,6 +287,14 @@ public class InputInsert
                 CodingFilterOrder.DescendingOrder();
                 break;
             case FilterAction.Exit:
+                AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Dots)
+                    .Start("Data rescue...", ctx =>
+                    {
+                        Thread.Sleep(1000);
+                    });
+
+                Environment.Exit(0);
                 break;
         }
 

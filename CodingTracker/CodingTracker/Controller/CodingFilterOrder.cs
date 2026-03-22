@@ -1,7 +1,8 @@
-﻿using Dapper;
-using CodingTracker.Data;
-using Spectre.Console;
+﻿using CodingTracker.Data;
 using CodingTracker.Model;
+using Dapper;
+using Spectre.Console;
+using static CodingTracker.Enums;
 
 namespace CodingTracker.Controller;
 internal class CodingFilterOrder : Database
@@ -55,6 +56,7 @@ internal class CodingFilterOrder : Database
         }
 
         AnsiConsole.Write(table);
+        return;
     }
 
     public static void OrderToMonths()
@@ -80,8 +82,7 @@ internal class CodingFilterOrder : Database
             .UseConverter(m =>
             {
                 return System.Globalization.DateTimeFormatInfo.InvariantInfo.GetMonthName(m); 
-            })
-            );
+            }));
 
         // use CAST to specify that valus is an int
         string sqlDetails = "SELECT * FROM CodingSessions WHERE CAST(strftime('%m', Date) AS INT) = @Month";
@@ -163,7 +164,7 @@ internal class CodingFilterOrder : Database
         }
 
         AnsiConsole.Write(table);
-
+        return;
     }
 
     public static void AscendingOrder()

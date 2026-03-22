@@ -46,6 +46,12 @@ internal class UserInterface
                     CodingController.ViewSessions();
                     break;
                 case MenuAction.ExiSession:
+                    AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Dots)
+                    .Start("Data rescue...", ctx =>
+                    {
+                        Thread.Sleep(1000);
+                    });
                     closeApp = true;
                     break;
             }
