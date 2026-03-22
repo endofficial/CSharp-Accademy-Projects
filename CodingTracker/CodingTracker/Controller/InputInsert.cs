@@ -42,6 +42,7 @@ public class InputInsert
                     Thread.Sleep(50);
 
                 }
+                AnsiConsole.MarkupLine("Press any key to stop session.");
                 ReadKey(true);
             });
 
@@ -68,7 +69,7 @@ public class InputInsert
     {
         var _console = console ?? AnsiConsole.Console;
 
-        var date = _console.Ask<string>("Please enter date (yyyy-MM-dd). You type [yellow]0 to return to main menu.[/]\n").Trim();
+        var date = _console.Ask<string>("Please enter date (yyyy-MM-dd). [yellow]You type 0 to return to main menu.[/]\n").Trim();
         if (date == "0") return "0";
 
         while (!DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
