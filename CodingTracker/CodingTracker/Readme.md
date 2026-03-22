@@ -15,6 +15,7 @@ Questa applicazione rispetta l'acronimo CRUD (Create, Read, Update e Delete).
 - **Gestione degli errori**: Il codice prevede una gestione robusta degli errori causati dall'utente e delle eccezioni possibili.
 - **Test unitari**: Il codice prevede dei test unitari per testare il corretto funzionamento di alcuni metodi.
 - **Console UI**: All'apertura del programma, dopo il caricamento del database, viene mostrato un menù a tendina. L'utente, in base alla sua scelta, utilizzando le frecce direzionali su e giù, naviga nel menù.
+
 	- <img src="Resources\doc\images\Menu.png" alt="menu" width="500"> 
 
 ## Functionality & Usage
