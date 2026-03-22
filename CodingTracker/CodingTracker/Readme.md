@@ -30,7 +30,7 @@ Questa applicazione rispetta l'acronimo CRUD (Create, Read, Update e Delete).
 	- <img src="Resources\doc\images\description.png" alt="description session" width="500">
 	
 	- ***Start session***: Il cronometro inizia e si fermerà solo quando l'utente premerà qualsiasi tasto.
-	- <img src="Resources\doc\images\livesession.png" alt="start session" width="500">
+	- <img src="Resources\doc\images\live-session.png" alt="start session" width="500">
 
 - **Register a new session**
 	- ***Registrazione data***: Registrare la data in cui la sessione si è svolta.
