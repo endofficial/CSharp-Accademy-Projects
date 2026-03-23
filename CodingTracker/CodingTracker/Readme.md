@@ -1,83 +1,83 @@
 # CODING TRACKER
 
-Coding tracker è la mia applicazione in C#, utile per registrare sessioni di lavoro, che utilizza SQlite.
+Coding Tracker is my C# application. It is used to record working sessions, using SQlite.
 
-Questa applicazione rispetta l'acronimo CRUD (Create, Read, Update e Delete).
+This application is CRUD (Create, Read, Update e Delete).
 
 ## Key Features
 
-- **Registrazione delle sessioni**: Il programma registra nuove sessioni di lavoro, registrando la data, un tempo di inizio, un tempo di fine e memorizzando una durata.
-- **CRUD**: L'applicazione consente di aggiungere, leggere, modificare ed eliminare le singole sessioni.
-- **Dettagli del codice**: Il codice è stato scritto utilizzando Spectre.Console.
-- **Archiviazione dati**: Il programma comunica con un database, utilizzando SQlite con Dapper.
-- **Inizializzazione automatica database**: Se il database non esiste, viene auto-generato dal programma all'avvio.
-- **Auto-generazione dati**: Se il database è vuoto, vengono auto-generati 100 record.
-- **Gestione degli errori**: Il codice prevede una gestione robusta degli errori causati dall'utente e delle eccezioni possibili.
-- **Test unitari**: Il codice prevede dei test unitari per testare il corretto funzionamento di alcuni metodi.
-- **Console UI**: All'apertura del programma, dopo il caricamento del database, viene mostrato un menù a tendina. L'utente, in base alla sua scelta, utilizzando le frecce direzionali su e giù, naviga nel menù.
+- **Session recording**: The program records new work sessions, recording date, a start time, a end time and storing a duration.
+- **CRUD**: The program allows to add, read, update and delete the sessions.
+- **Code details**: The code is written using Spectre.Console.
+- **Store date**: The program communicate with a database, using SQlite with Dapper.
+- **Database initialization**: If database don't exists, it is auto-generated automatically.
+- **Self-genereting data**: If database is empty, 100 records are generated.
+- **Error handling**: The code provides a robust error handling user generated and possible exceptions.
+- **Unit test**: The code provides the unit tests to test the correct function of the methods.
+- **Console UI**: Open the program, after loading the database, is shown a menu. The user can move the directional arrows to navigate in the menu.
 
 	- <img src="Resources\doc\images\Menu.png" alt="menu" width="500"> 
 
 ## Functionality & Usage
 
 - **Live session**
-	- ***Registrazione data***: Registrare la data in cui la sessione si svolge.
+	- ***Date recording***: Record date of the session.
 		- <img src="Resources\doc\images\Live-session-date.png" alt="date" width="500">
 	
-	- ***Scelta dell'utente***: Digitare 'P' o 'p' per andare avanti con il programma. Digitare '0' per tornare al menù.
+	- ***User choice***: Type 'P' or 'p' to continue. Type '0' to return to main menu. 
 		- <img src="Resources\doc\images\play-session.png" alt="play session" width="500">
 	
-	- ***Descrizione***: Aggiungere una descrizione alla sessione.
+	- ***Description***: Add a description for the session.
 		- <img src="Resources\doc\images\description.png" alt="description session" width="500">
 	
-	- ***Start session***: Il cronometro inizia e si fermerà solo quando l'utente premerà qualsiasi tasto.
+	- ***Start session***: The stopwatch is start and it is stop when the user presses any key.
 		- <img src="Resources\doc\images\live-session.png" alt="start session" width="500">
 
 - **Register a new session**
-	- ***Registrazione data***: Registrare la data in cui la sessione si è svolta.
-	- ***Descrizione***: Aggiungere una descrizione alla sessione.
-	- ***Start time***: Indicare l'orario di inizio.
+	- ***Date recording***: Record date of the session.
+	- ***Description***: Add a description for the session.
+	- ***Start time***: Enter the start time.
 		- <img src="Resources\doc\images\startTime.png" alt="Start Time" width="500">
 	
-	- ***End time***: Indicare l'orario di fine.
+	- ***End time***: Enter the end time.
 		- <img src="Resources\doc\images\endTime.png" alt="End Time" width="500">
 	
-- **Visualizzazione sessioni**
-	- ***Visualizzazione delle sessioni***: Viene mostrata una tabella con tutte le sessioni nel database.
+- **View sessions**
+	- ***View of the sessions***: It's shown a table with all the sessions.
 		- <img src="Resources\doc\images\all-records.png" alt="All records" width="500">
 	
-	- ***Filtri***: Viene mostrato un elenco di filtri.
+	- ***Fiters***: A list of filters is displayed
 		- <img src="Resources\doc\images\choice-list.png" alt="view filters" width="500">
 	
-		- ***Filtro anno***: L'utente può scegliere di quale anno vuole visualizzare le sessioni.
+		- ***Year filter***: The user can choose the year that he wants to view is displayed.
 			- <img src="Resources\doc\images\orderToYear.png" alt="filter to year" width="500">
 		
-		- ***Filtro mesi***: L'utente può scegliere di quale mese vuole visualizzare le sessioni.
+		- ***Month filter***: The user can choose the month that he wants to view is displayed.
 			- <img src="Resources\doc\images\orderToMonth.png" alt="filter to month" width="500">
 		
-		- ***Filtro giorni***: L'utente può scegliere di quale giorno vuole visualizzare le sessioni.
+		- ***Day filter***: The user can choose the day that he wants to view is displayed.
 			- <img src="Resources\doc\images\orderToDay.png" alt="filter to day" width="500">
 		
-		- ***Filtro per ordine crescente***: L'utente può scegliere di visualizzare le sessioni in ordine crescente.
-		- ***Filtro per ordine decrescente***: L'utente può scegliere di visualizzare le sessioni in ordine decrescente.
+		- ***Ascending order filter***: The user can choose to view sessions by ascending order.
+		- ***Descending order filter***: The user can choose to view sessions by descending order.
 		
 - **Update session**
-	- ***Visualizzazione delle sessioni***: Viene mostrata una tabella con tutte le sessioni nel database.
-	- ***Cosa si vuole aggiornare?***: Viene mostrata una lista in cui l'utente può navigare per scegliere cosa vuole aggiornare.
+	- ***View of the sessions***: It's shown a table with all the sessions.
+	- ***What you want update?***: It's shown a list and the user can navigate to choose what to update.
 		
 		- <img src="Resources\doc\images\all-sessions-update.png" alt="view all sessions" width="500">
 
 - **Delete session**
-	- ***Visualizzazione delle sessioni***: Viene mostrata una tabella con tutte le sessioni nel database.
+	- ***View of the sessions***: It's shown a table with all the sessions.
 		- <img src="Resources\doc\images\allsessiontodelete.png" alt="view all sessions to delete" width="500">
 
-	- ***Eliminare tutto il database***: Scegliendo l'opzione '1', verrà cancellato l'intero database.
-	- ***Scegliere database da eliminare***: Scegliendo '2', dovrà essere indicato un id corrispondente alla sessione che si vuole eliminare.
+	- ***Delete all database***: Type '1' to delete all database.
+	- ***Delete one session***: If the user press '2', he will have to indicate the Id session he wants to delete.
 		- <img src="Resources\doc\images\allsessiontodelete.png" alt="option to delete one session" width="500">
 
 ## What I learned
 
-- Integrazione del database: Ho imparato come creare, connettere e comunicare con un database con Dapper.
-- Integrazione di un cronometro: Ho imparato come implementare correttamente il metodo StopWatch per la sessione live.
-- Problem solving: Ho avuto difficoltà ad implementare i filtri per visualizzare il database. Ho risolto con un'approfondita ricerca nel web. Ho capito la funzione di 'strftime' che serve a formattare date e orari trasformandoli in stringhe di testo leggibili e personalizzate.
-- Unit testing: Ho implementato dei test unitari per verificare il corretto funzionamento di alcuni metodi.
+- Database integration: I learned how to create, connect and communicate with a database using Dapper.
+- Stopwatch integration: I learned how to implement the stopwatch method to live session.
+- Problem solving: I had difficulties to implement the filters. I solved it with a serch on the web. I understand the 'strftime' function. It is used to format date and time and convert in text.
+- Unit testing: I implement of the unit tests to verify the correct function of the methods.
