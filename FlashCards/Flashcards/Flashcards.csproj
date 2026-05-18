@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="System.Console" Static="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="DataAccess\Database.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Dapper" Version="2.1.72" />
+	  <PackageReference Include="Dommel" Version="3.5.2" />
+	  <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.8" />
+	  <PackageReference Include="Spectre.Console" Version="0.55.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="DataAccess\AppSettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
