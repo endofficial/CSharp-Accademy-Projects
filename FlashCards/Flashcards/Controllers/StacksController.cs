@@ -11,7 +11,7 @@ internal class StacksController
     public List<Stack> GetAllStacks()
     {
         using var connection = Database.GetConnection();
-        string sql = "SELECT StackID, NameStack FROM dbo.Stacks ORDER BY NameStack";
+        string sql = "SELECT StackID, NameStack FROM dbo.Stacks ORDER BY StackID ASC";
         return connection.Query<Stack>(sql).ToList();
     }
 
@@ -23,9 +23,12 @@ internal class StacksController
         connection.Execute(sql, new { Name = name }); 
     }
 
-    public static bool UpdateStack()
+    // to update the name of a stack, we need to specify the stack id and the new name.
+    public void UpdateStack(string name, int stackId)
     {
-        return true;
+        using var connection = Database.GetConnection();
+        string sql = "UPDATE Stacks SET NameStack = @Name WHERE StackID = @StackID";
+        connection.Execute(sql, new { Name = name, StackID = stackId });
     }
 
     public static bool DeleteStack()
@@ -33,4 +36,13 @@ internal class StacksController
         return true;
     }
 
+    // To check if a stack exists
+    public bool CheckIfStackExists(int stackId)
+    {
+        using var connection = Database.GetConnection();
+        string sqlCode = "SELECT 1 FROM Stacks WHERE StackID = @StackID";
+        bool exists = connection.ExecuteScalar<bool>(sqlCode, new { StackID = stackId });
+        if (!exists) return false;
+        else return true;
+    }
 }

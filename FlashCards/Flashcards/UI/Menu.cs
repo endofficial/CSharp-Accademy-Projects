@@ -15,7 +15,7 @@ internal class  UserInterface
             AnsiConsole.Clear();
             var actionChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuAction>()
-                .Title("What would you like to do?")
+                .Title("[blue]Main Menu[/]")
                 .UseConverter(option => option switch
                 {
                     MenuAction.ManageStacks => "Manage Stacks",
