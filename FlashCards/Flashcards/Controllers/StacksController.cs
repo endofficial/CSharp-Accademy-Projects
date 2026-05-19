@@ -31,9 +31,18 @@ internal class StacksController
         connection.Execute(sql, new { Name = name, StackID = stackId });
     }
 
-    public static bool DeleteStack()
+    public void DeleteAllStacks()
     {
-        return true;
+        using var connection = Database.GetConnection();
+        string sql = "DELETE FROM Stacks";
+        connection.Execute(sql);
+    }
+
+    public void DeleteStack(int stackId)
+    {
+        using var connection = Database.GetConnection();
+        string sql = "DELETE FROM Stacks WHERE StackID = @StackID";
+        connection.Execute(sql, new { StackID = stackId });
     }
 
     // To check if a stack exists

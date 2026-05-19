@@ -28,4 +28,11 @@ public class Enums
         DeleteFlashcard,
         BackToMainMenu
     }
+
+    internal enum ChooseDeleteAction
+    {
+        DeleteAll,
+        DeleteOne,
+        BackToMainMenu
+    }
 }

@@ -2,6 +2,7 @@
 using Spectre.Console;
 using static Flashcards.Enums.Enums;
 using Flashcards.Controllers;
+using System.Runtime.InteropServices;
 
 namespace Flashcards.UI;
 
@@ -41,6 +42,7 @@ internal class StacksUI
                     UpdateStack();
                     break;
                 case StackAction.DeleteStack:
+                    DeleteStack();
                     break;
                 case StackAction.BackToMainMenu:
                     closeApp = true;
@@ -137,28 +139,15 @@ internal class StacksUI
                     {
                         return ValidationResult.Error("[red]Invalid input. Please enter a positive integer for the stack ID.[/]");
                     }
+
+                    if (!_stacksController.CheckIfStackExists(input))
+                    {
+                        return ValidationResult.Error("[red]Stack not found. Please enter a valid stack ID.[/]");
+                    }
+
                     return ValidationResult.Success();
                 });
             int UpStackID = AnsiConsole.Prompt(idPrompt);
-
-            bool stackExists = _stacksController.CheckIfStackExists(UpStackID);
-            while (!stackExists)
-            {
-                AnsiConsole.MarkupLine("[red]Stack not found. Please enter a valid stack ID.[/]\n");
-
-                idPrompt = new TextPrompt<int>("\nEnter the ID of the stack you want to update: ")
-                .PromptStyle("yellow")
-                .Validate(input =>
-                {
-                    if (input <= 0)
-                    {
-                        return ValidationResult.Error("[red]Invalid input. Please enter a positive integer for the stack ID.[/]");
-                    }
-                    return ValidationResult.Success();
-                });
-                UpStackID = AnsiConsole.Prompt(idPrompt);
-                stackExists = _stacksController.CheckIfStackExists(UpStackID);
-            }
 
             var namePrompt = new TextPrompt<string>("Enter the name to update the stack: ")
                 .PromptStyle("yellow")
@@ -175,6 +164,79 @@ internal class StacksUI
             _stacksController.UpdateStack(UpStackName, UpStackID);
 
             AnsiConsole.MarkupLine("[green]Stack updated successfully![/]");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+        }
+
+        AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
+        ReadKey(true);
+    }
+
+    // Method to delete stacks with options to delete all or a specific stack by ID
+    private void DeleteStack()
+    {
+        AnsiConsole.Clear();
+
+        ShowStacksTable(waitForKey: false);
+
+        bool closeApp = false;
+        while (!closeApp)
+        {
+            var actionChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<ChooseDeleteAction>()
+                .Title("What would you like to delete?")
+                .UseConverter(option => option switch
+                {
+                    ChooseDeleteAction.DeleteAll => "Delete All Stacks",
+                    ChooseDeleteAction.DeleteOne => "Delete One Stack",
+                    ChooseDeleteAction.BackToMainMenu => "Back to Stack Menu",
+                    _ => option.ToString()
+                })
+                .AddChoices(Enum.GetValues<ChooseDeleteAction>()));
+            switch (actionChoice)
+            {
+                case ChooseDeleteAction.DeleteAll:
+                    _stacksController.DeleteAllStacks();
+                    AnsiConsole.MarkupLine("[green]All stacks deleted successfully![/]");
+                    break;
+                case ChooseDeleteAction.DeleteOne:
+                    DeleteOne();
+                    break;
+                case ChooseDeleteAction.BackToMainMenu:
+                    closeApp = true;
+                    break;
+            }
+        }
+    }
+
+    // Method to delete a specific stack by ID with input validation
+    private void DeleteOne()
+    {
+        try
+        {
+            var deletePrompt = new TextPrompt<int>("Enter the ID of the stack you want to delete: ")
+                .PromptStyle("yellow")
+                .Validate(input =>
+                {
+                    if (input <= 0)
+                    {
+                        return ValidationResult.Error("[red]Invalid input. Please enter a positive integer for the stack ID.[/]");
+                    }
+
+                    if (!_stacksController.CheckIfStackExists(input))
+                    {
+                        return ValidationResult.Error("[red]Stack not found. Please enter a valid stack ID.[/]");
+                    }
+
+                    return ValidationResult.Success();
+                });
+            int DelStackID = AnsiConsole.Prompt(deletePrompt);
+
+            bool stackExists = _stacksController.CheckIfStackExists(DelStackID);
+
+            _stacksController.DeleteStack(DelStackID);
         }
         catch (Exception ex)
         {
