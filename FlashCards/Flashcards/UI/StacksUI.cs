@@ -49,6 +49,7 @@ internal class StacksUI
         }
     }
 
+    // Method to display all stacks
     private void ShowStacksTable(bool waitForKey = true) // Method to display stacks in a table format
     {
         try
@@ -89,12 +90,26 @@ internal class StacksUI
         }
     }
 
+    // Method to add a new stack with input validation
     private void AddStack()
     {
         try
         {
             AnsiConsole.Clear();
-            string name = AnsiConsole.Ask<string>("Enter the name of the new stack: ");
+
+            var namePrompt = new TextPrompt<string>("Enter the name of the new stack: ")
+                .PromptStyle("yellow")
+                .Validate(input =>
+                {
+                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _))
+                    {
+                        return ValidationResult.Error("[red]Invalid input. Please enter a non-empty name that is not a number.[/]");
+                    }
+
+                    return ValidationResult.Success();
+                });
+            string name = AnsiConsole.Prompt(namePrompt); 
+
             _stacksController.CreateStack(name);
             AnsiConsole.MarkupLine("[green]Stack created successfully![/]");
         }
@@ -104,40 +119,61 @@ internal class StacksUI
         }
 
         AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-        ReadKey();
+        ReadKey(true);
     }
 
+    // Method to update an existing stack with input validation
     private void UpdateStack(bool waitForKey = false)
     {
         ShowStacksTable(waitForKey);
 
         try 
         {
-            int UpStackID = AnsiConsole.Ask<int>("Enter the ID of the stack you want to update: ");
-            if (UpStackID <= 0)
-            {
-                AnsiConsole.MarkupLine("[red]Invalid input. Please enter a positive integer for the stack ID.[/]\n");
-                UpStackID = AnsiConsole.Ask<int>("Enter the ID of the stack you want to update: ");
-            }
+            var idPrompt = new TextPrompt<int>("\nEnter the ID of the stack you want to update: ")
+                .PromptStyle("yellow")
+                .Validate(input =>
+                {
+                    if (input <= 0)
+                    {
+                        return ValidationResult.Error("[red]Invalid input. Please enter a positive integer for the stack ID.[/]");
+                    }
+                    return ValidationResult.Success();
+                });
+            int UpStackID = AnsiConsole.Prompt(idPrompt);
 
             bool stackExists = _stacksController.CheckIfStackExists(UpStackID);
             while (!stackExists)
             {
                 AnsiConsole.MarkupLine("[red]Stack not found. Please enter a valid stack ID.[/]\n");
-                UpStackID = AnsiConsole.Ask<int>("Enter the ID of the stack you want to update: ");
-                if (UpStackID < 0)
+
+                idPrompt = new TextPrompt<int>("\nEnter the ID of the stack you want to update: ")
+                .PromptStyle("yellow")
+                .Validate(input =>
                 {
-                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a positive integer for the stack ID.[/]\n");
-                    UpStackID = AnsiConsole.Ask<int>("Enter the ID of the stack you want to update: ");
-                }
-                else
-                {
-                    stackExists = _stacksController.CheckIfStackExists(UpStackID);
-                }
+                    if (input <= 0)
+                    {
+                        return ValidationResult.Error("[red]Invalid input. Please enter a positive integer for the stack ID.[/]");
+                    }
+                    return ValidationResult.Success();
+                });
+                UpStackID = AnsiConsole.Prompt(idPrompt);
+                stackExists = _stacksController.CheckIfStackExists(UpStackID);
             }
 
-            string UpStackName = AnsiConsole.Ask<string>("Enter the new name for the stack: ");
+            var namePrompt = new TextPrompt<string>("Enter the name to update the stack: ")
+                .PromptStyle("yellow")
+                .Validate(input =>
+                {
+                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _))
+                    {
+                        return ValidationResult.Error("[red]Invalid input. Please enter a non-empty name that is not a number.[/]");
+                    }
+
+                    return ValidationResult.Success();
+                });
+            string UpStackName = AnsiConsole.Prompt(namePrompt); 
             _stacksController.UpdateStack(UpStackName, UpStackID);
+
             AnsiConsole.MarkupLine("[green]Stack updated successfully![/]");
         }
         catch (Exception ex)
@@ -146,6 +182,6 @@ internal class StacksUI
         }
 
         AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-        ReadKey();
+        ReadKey(true);
     }
 }
