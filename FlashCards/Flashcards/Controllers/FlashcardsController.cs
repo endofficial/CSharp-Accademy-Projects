@@ -1,10 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Flashcards.DataAccess;
 
-namespace Flashcards.Controllers
+namespace Flashcards.Controllers;
+
+internal class FlashcardsController : Database
 {
-    internal class FlashcardsController
+    public static bool ViewFlashcards()
     {
+        return true;
     }
+
+    public static bool CreateFlashcard()
+    {
+        return true;
+    }
+
+    public static bool UpdateFlashcard()
+    {
+        return true;
+    }
+
+    public static bool DeleteFlashcard()
+    {
+        return true;
+    }
+
 }

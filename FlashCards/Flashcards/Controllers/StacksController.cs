@@ -6,16 +6,21 @@ using Flashcards.DataAccess;
 
 namespace Flashcards.Controllers;
 
-internal class StacksController : Database
+internal class StacksController 
 {
-    public static bool ViewStacks()
+    public List<Stack> GetAllStacks()
     {
-        return true;
+        using var connection = Database.GetConnection();
+        string sql = "SELECT StackID, NameStack FROM dbo.Stacks ORDER BY NameStack";
+        return connection.Query<Stack>(sql).ToList();
     }
 
-    public static bool CreateStack()
+    // Aggiungere il controllo quando non viene inserito un nome stack. Essendo un campo obbligatorio, non dovrebbe essere possibile creare uno stack senza nome.
+    public void CreateStack(string name)
     {
-        return true;
+        using var connection = Database.GetConnection();
+        string sql = "INSERT INTO Stacks (NameStack) VALUES (@Name)";
+        connection.Execute(sql, new { Name = name }); 
     }
 
     public static bool UpdateStack()

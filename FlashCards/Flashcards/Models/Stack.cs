@@ -2,6 +2,6 @@
 
 public class Stack
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public int StackID { get; set; }
+    public string NameStack { get; set; } = string.Empty;
 }
