@@ -1,6 +1,7 @@
 ﻿using Flashcards.DataAccess;
 using Flashcard.UI;
 using System.Net.Http.Headers;
+using Flashcards.Controllers;
 
 namespace Flashcard
 {
@@ -11,7 +12,8 @@ namespace Flashcard
             Database database = new();
             database.Initialize();
 
-            UserInterface userInterface = new();
+            IStacksController _stacksController = new StacksController();
+            UserInterface userInterface = new(_stacksController);
             userInterface.MainMenu();
         }
     }

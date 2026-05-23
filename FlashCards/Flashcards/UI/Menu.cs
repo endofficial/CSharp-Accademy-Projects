@@ -5,8 +5,15 @@ using Flashcards.UI;
 
 namespace Flashcard.UI;
 
-internal class  UserInterface
+internal class UserInterface
 {
+    private readonly IStacksController _stacksController;
+    internal UserInterface(IStacksController stacksController)
+    {
+        _stacksController = stacksController;
+
+    }
+
     internal void MainMenu()
     {
         bool closeApp = false;
@@ -30,7 +37,7 @@ internal class  UserInterface
             switch (actionChoice)
             {
                 case MenuAction.ManageStacks:
-                    StacksUI stacksUI = new StacksUI();
+                    StacksUI stacksUI = new StacksUI(_stacksController);
                     stacksUI.stackMenu();
                     break;
                 case MenuAction.ManageFlashcards:

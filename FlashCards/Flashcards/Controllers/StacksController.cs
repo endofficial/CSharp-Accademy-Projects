@@ -6,7 +6,17 @@ using Flashcards.DataAccess;
 
 namespace Flashcards.Controllers;
 
-internal class StacksController 
+public interface IStacksController
+{
+    List<Stack> GetAllStacks();
+    void CreateStack(string name);
+    void UpdateStack(string name, int stackId);
+    void DeleteAllStacks();
+    void DeleteStack(int stackId);
+    bool CheckIfStackExists(int stackId);
+}
+
+public class StacksController : IStacksController
 {
     public List<Stack> GetAllStacks()
     {

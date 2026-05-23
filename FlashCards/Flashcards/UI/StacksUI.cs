@@ -3,12 +3,18 @@ using Spectre.Console;
 using static Flashcards.Enums.Enums;
 using Flashcards.Controllers;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Flashcards.UI;
 
-internal class StacksUI
+public class StacksUI
 {
-    private readonly StacksController _stacksController = new StacksController();
+    private readonly IStacksController _stacksController;
+
+    public StacksUI(IStacksController stacksController)
+    {
+        _stacksController = stacksController;
+    }
 
     public void stackMenu()
     {
@@ -52,7 +58,7 @@ internal class StacksUI
     }
 
     // Method to display all stacks
-    private void ShowStacksTable(bool waitForKey = true) // Method to display stacks in a table format
+    public void ShowStacksTable(bool waitForKey = true) // Method to display stacks in a table format
     {
         try
         {
@@ -93,39 +99,55 @@ internal class StacksUI
     }
 
     // Method to add a new stack with input validation
-    private void AddStack()
+    public void AddStack(IAnsiConsole? console = null)
     {
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
         try
         {
-            AnsiConsole.Clear();
+            _console.Clear();
 
             var namePrompt = new TextPrompt<string>("Enter the name of the new stack: ")
                 .PromptStyle("yellow")
                 .Validate(input =>
                 {
-                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _))
+                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _) || input == "\"\"" || IsOnlySpecialCharacters(input))
                     {
                         return ValidationResult.Error("[red]Invalid input. Please enter a non-empty name that is not a number.[/]");
                     }
 
                     return ValidationResult.Success();
                 });
-            string name = AnsiConsole.Prompt(namePrompt); 
+            string name = _console.Prompt(namePrompt); 
 
             _stacksController.CreateStack(name);
-            AnsiConsole.MarkupLine("[green]Stack created successfully![/]");
+            _console.MarkupLine("[green]Stack created successfully![/]");
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
         }
 
-        AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-        ReadKey(true);
+        _console.MarkupLine("\nPress any key to return to the stack menu...");
+
+        try
+        {
+            _console.Input.ReadKey(true);
+        }
+        catch (InvalidOperationException)
+        {
+            // during unit testing, the console input may not be available
+        }
+    }
+
+    public static bool IsOnlySpecialCharacters(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return true;
+
+        return Regex.IsMatch(input, @"^[^a-zA-Z0-9]+$"); // This regex checks if the string contains only special characters (no letters or digits)
     }
 
     // Method to update an existing stack with input validation
-    private void UpdateStack(bool waitForKey = false)
+    public void UpdateStack(bool waitForKey = false)
     {
         ShowStacksTable(waitForKey);
 
@@ -175,7 +197,7 @@ internal class StacksUI
     }
 
     // Method to delete stacks with options to delete all or a specific stack by ID
-    private void DeleteStack()
+    public void DeleteStack()
     {
         AnsiConsole.Clear();
 
@@ -212,7 +234,7 @@ internal class StacksUI
     }
 
     // Method to delete a specific stack by ID with input validation
-    private void DeleteOne()
+    public void DeleteOne()
     {
         try
         {
