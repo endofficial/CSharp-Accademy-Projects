@@ -155,7 +155,7 @@ internal class CodingController : Database
         string sqlId = @"
             SELECT EXISTS (SELECT 1 FROM CodingSessions WHERE Id = @Id)";
 
-        bool exists = connection.ExecuteScalar<bool>(sqlId, new { Id = NumberId });
+        bool exists = connection.ExecuteScalar<bool>(sqlId, new { Id = NumberId }); 
 
         while (!exists)
         {

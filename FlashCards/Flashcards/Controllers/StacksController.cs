@@ -10,7 +10,7 @@ public interface IStacksController
 {
     List<Stack> GetAllStacks();
     void CreateStack(string name);
-    void UpdateStack(string name, int stackId);
+    void UpdateStack(int stackId, string name);
     void DeleteAllStacks();
     void DeleteStack(int stackId);
     bool CheckIfStackExists(int stackId);
@@ -25,7 +25,6 @@ public class StacksController : IStacksController
         return connection.Query<Stack>(sql).ToList();
     }
 
-    // Aggiungere il controllo quando non viene inserito un nome stack. Essendo un campo obbligatorio, non dovrebbe essere possibile creare uno stack senza nome.
     public void CreateStack(string name)
     {
         using var connection = Database.GetConnection();
@@ -33,8 +32,7 @@ public class StacksController : IStacksController
         connection.Execute(sql, new { Name = name }); 
     }
 
-    // to update the name of a stack, we need to specify the stack id and the new name.
-    public void UpdateStack(string name, int stackId)
+    public void UpdateStack(int stackId, string name)
     {
         using var connection = Database.GetConnection();
         string sql = "UPDATE Stacks SET NameStack = @Name WHERE StackID = @StackID";

@@ -16,7 +16,6 @@ internal class Database
 		var config = new ConfigurationBuilder()
 			.AddJsonFile("AppSettings.json", optional: false, reloadOnChange: true)
 			.Build();
-
 		_connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found in configuration.");
         _masterConnectionString = config.GetConnectionString("MasterConnection") ?? throw new InvalidOperationException("Master connection string not found in configuration.");
     }

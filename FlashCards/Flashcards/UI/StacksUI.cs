@@ -58,16 +58,18 @@ public class StacksUI
     }
 
     // Method to display all stacks
-    public void ShowStacksTable(bool waitForKey = true) // Method to display stacks in a table format
+    public void ShowStacksTable(bool waitForKey = true, IAnsiConsole? console = null) // Method to display stacks in a table format
     {
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
+
         try
         {
-            AnsiConsole.Clear();
+            _console.Clear();
             var stacks = _stacksController.GetAllStacks();
 
             if (stacks.Count == 0)
             {
-                AnsiConsole.MarkupLine("[yellow]No stacks found. Please create a stack first.[/]");
+                _console.MarkupLine("[yellow]No stacks found. Please create a stack first.[/]");
             }
             else
             {
@@ -83,18 +85,18 @@ public class StacksUI
                         stack.NameStack
                     );
                 }
-                AnsiConsole.Write(table);
+                _console.Write(table);
             }
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
         }
 
         if (waitForKey)
         {
-            AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-            ReadKey(true);
+            _console.MarkupLine("\nPress any key to return to the stack menu...");
+            _console.Input.ReadKey(true);
         }
     }
 
@@ -147,9 +149,10 @@ public class StacksUI
     }
 
     // Method to update an existing stack with input validation
-    public void UpdateStack(bool waitForKey = false)
+    public void UpdateStack(bool waitForKey = false, IAnsiConsole? console = null)
     {
-        ShowStacksTable(waitForKey);
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
+        ShowStacksTable(waitForKey, _console);
 
         try 
         {
@@ -169,44 +172,60 @@ public class StacksUI
 
                     return ValidationResult.Success();
                 });
-            int UpStackID = AnsiConsole.Prompt(idPrompt);
+            int UpStackID = _console.Prompt(idPrompt);
 
             var namePrompt = new TextPrompt<string>("Enter the name to update the stack: ")
                 .PromptStyle("yellow")
                 .Validate(input =>
                 {
-                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _))
+                    if (string.IsNullOrWhiteSpace(input) || double.TryParse(input, out _) || input == "\"\"" || IsOnlySpecialCharacters(input))
                     {
                         return ValidationResult.Error("[red]Invalid input. Please enter a non-empty name that is not a number.[/]");
                     }
 
                     return ValidationResult.Success();
                 });
-            string UpStackName = AnsiConsole.Prompt(namePrompt); 
-            _stacksController.UpdateStack(UpStackName, UpStackID);
+            string UpStackName = _console.Prompt(namePrompt); 
+            _stacksController.UpdateStack(UpStackID, UpStackName);
 
-            AnsiConsole.MarkupLine("[green]Stack updated successfully![/]");
+            _console.MarkupLine("[green]Stack updated successfully![/]");
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
         }
 
-        AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-        ReadKey(true);
+        _console.MarkupLine("\nPress any key to return to the stack menu...");
+        try
+        {
+            _console.Input.ReadKey(true);
+        }
+        catch (InvalidOperationException)
+        {
+            // during unit testing, the console input may not be available
+        }    
     }
 
     // Method to delete stacks with options to delete all or a specific stack by ID
-    public void DeleteStack()
+    public void DeleteStack(IAnsiConsole? console = null)
     {
-        AnsiConsole.Clear();
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
+
+        try
+        {
+            _console.Clear();
+        }
+        catch (IOException)
+        {
+            // Handle the exception if the console cannot be cleared
+        }
 
         ShowStacksTable(waitForKey: false);
 
         bool closeApp = false;
         while (!closeApp)
         {
-            var actionChoice = AnsiConsole.Prompt(
+            var actionChoice = _console.Prompt(
                 new SelectionPrompt<ChooseDeleteAction>()
                 .Title("What would you like to delete?")
                 .UseConverter(option => option switch
@@ -221,10 +240,10 @@ public class StacksUI
             {
                 case ChooseDeleteAction.DeleteAll:
                     _stacksController.DeleteAllStacks();
-                    AnsiConsole.MarkupLine("[green]All stacks deleted successfully![/]");
+                    _console.MarkupLine("[green]All stacks deleted successfully![/]");
                     break;
                 case ChooseDeleteAction.DeleteOne:
-                    DeleteOne();
+                    DeleteOne(_console);
                     break;
                 case ChooseDeleteAction.BackToMainMenu:
                     closeApp = true;
@@ -234,8 +253,10 @@ public class StacksUI
     }
 
     // Method to delete a specific stack by ID with input validation
-    public void DeleteOne()
+    public void DeleteOne(IAnsiConsole? console = null)
     {
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
+
         try
         {
             var deletePrompt = new TextPrompt<int>("Enter the ID of the stack you want to delete: ")
@@ -254,7 +275,7 @@ public class StacksUI
 
                     return ValidationResult.Success();
                 });
-            int DelStackID = AnsiConsole.Prompt(deletePrompt);
+            int DelStackID = _console.Prompt(deletePrompt);
 
             bool stackExists = _stacksController.CheckIfStackExists(DelStackID);
 
@@ -262,10 +283,18 @@ public class StacksUI
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
         }
 
-        AnsiConsole.MarkupLine("\nPress any key to return to the stack menu...");
-        ReadKey(true);
+        _console.MarkupLine("[green]Stack deleted successfully![/]");
+        _console.MarkupLine("\nPress any key to return to the stack menu...");
+        try
+        {
+            _console.Input.ReadKey(true);
+        }
+        catch (InvalidOperationException)
+        {
+            // during unit testing, the console input may not be available
+        }
     }
 }
