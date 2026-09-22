@@ -9,9 +9,9 @@ namespace Flashcards.Controllers;
 public interface IFlashcardsController
 {
     List<FlashcardDto> GetAllFlashcards(int stackId);
-    void CreateFlashcard();
-    void UpdateFlashcard();
-    void DeleteFlashcard();
+    void CreateFlashcard(int stackId, string front, string back);
+    void UpdateFlashcard(int flashcardId, string front, string back);
+    void DeleteFlashcard(int flashcardId);
 }
 
 internal class FlashcardsController : IFlashcardsController
@@ -40,19 +40,25 @@ internal class FlashcardsController : IFlashcardsController
         return dtoList;
     }
 
-    public void CreateFlashcard()
+    public void CreateFlashcard(int stackID, string front, string back)
     {
-        return;
+        using var connection = Database.GetConnection();
+        string sql = "INSERT INTO Flashcards (StackID, Front, Back) VALUES (@StackID, @Front, @Back)";
+        connection.Execute(sql, new { StackID = stackID, Front = front, Back = back });
     }
 
-    public void UpdateFlashcard()
+    public void UpdateFlashcard(int flashcardID, string front, string back)
     {
-        return;
+        using var connection = Database.GetConnection();
+        string sql = "UPDATE Flashcards SET Front = @Front, Back = @Back WHERE FlashcardID = @FlashcardID";
+        connection.Execute(sql, new { Front = front, Back = back, FlashcardID = flashcardID });
     }
 
-    public void DeleteFlashcard()
+    public void DeleteFlashcard(int flashcardID)
     {
-        return;
+        using var connection = Database.GetConnection();
+        string sql = "DELETE FROM Flashcards WHERE FlashcardID = @FlashcardID";
+        connection.Execute(sql, new { FlashcardID = flashcardID });
     }
 
 }
