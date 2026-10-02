@@ -11,7 +11,12 @@ internal class UserInterface
     internal UserInterface(IStacksController stacksController)
     {
         _stacksController = stacksController;
+    }
 
+    private readonly IFlashcardsController _flashcardsController;
+    internal UserInterface(IFlashcardsController flashcardsController)
+    {
+        _flashcardsController = flashcardsController;
     }
 
     internal void MainMenu()
@@ -41,7 +46,7 @@ internal class UserInterface
                     stacksUI.stackMenu();
                     break;
                 case MenuAction.ManageFlashcards:
-                    FlashcardsUI flashcardsUI = new FlashcardsUI();
+                    FlashcardsUI flashcardsUI = new FlashcardsUI(_stacksController, _flashcardsController);
                     flashcardsUI.flashcardsMenu();
                     break;
                 case MenuAction.StudySession:
