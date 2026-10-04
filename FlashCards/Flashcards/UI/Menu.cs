@@ -7,14 +7,14 @@ namespace Flashcard.UI;
 
 internal class UserInterface
 {
-    private readonly IStacksController _stacksController;
-    internal UserInterface(IStacksController stacksController)
+    private readonly IStacksController? _stacksController;
+    internal UserInterface(IStacksController? stacksController)
     {
         _stacksController = stacksController;
     }
 
-    private readonly IFlashcardsController _flashcardsController;
-    internal UserInterface(IFlashcardsController flashcardsController)
+    private readonly IFlashcardsController? _flashcardsController;
+    internal UserInterface(IFlashcardsController? flashcardsController)
     {
         _flashcardsController = flashcardsController;
     }

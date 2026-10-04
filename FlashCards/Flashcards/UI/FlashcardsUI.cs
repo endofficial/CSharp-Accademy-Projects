@@ -39,7 +39,7 @@ public class FlashcardsUI
             switch (actionChoice)
             {
                 case FlashcardAction.ViewFlashcards:
-                    ShowStackToFlashcards();
+                    ShowFlashcards();
                     break;
                 case FlashcardAction.CreateFlashcard:
                     break;
@@ -55,7 +55,7 @@ public class FlashcardsUI
     }
 
     // modificare, separare le responsabilità
-    public void ShowStackToFlashcards(bool waitForKey = true, IAnsiConsole? console = null)
+    public int? SelectStack(IAnsiConsole? console = null)
     {
         IAnsiConsole? _console = console ?? AnsiConsole.Console;
 
@@ -77,49 +77,107 @@ public class FlashcardsUI
             );
 
             int selectedStackId = selectedStack.StackID;
-            ShowFlashcards(selectedStackId, waitForKey, console);
+            return selectedStackId;
         }
-
-        if (waitForKey)
-        {
-            _console.WriteLine("\nPress any key to continue...");
-            _console.Input.ReadKey(true);
-        }
+        return null;
     }
 
-    public void ShowFlashcards(int stackId, bool waitForKey = true, IAnsiConsole? console = null)
+    // Method to show flashcards for a selected stack
+    public void ShowFlashcards(bool waitForKey = true, IAnsiConsole? console = null)
     {
         IAnsiConsole? _console = console ?? AnsiConsole.Console;
 
         try
         {
             _console.Clear();
-            var flashcards = _flashcardsController.GetAllFlashcards(stackId);
 
-            if (flashcards.Count == 0)
-            {
-                _console.MarkupLine("[yellow]No flashcards found.[/]");
-            }
+            int? selectedStackId = SelectStack(_console);
+            if (selectedStackId is null) return;
             else
             {
-                var table = new Table();
-                table.Border(TableBorder.Rounded)
-                    .AddColumn("ID")
-                    .AddColumn("Front")
-                    .AddColumn("Back");
+                var flashcards = _flashcardsController.GetAllFlashcards(selectedStackId);
 
-                foreach (var flashcard in flashcards)
+                if (flashcards.Count == 0)
                 {
-                    table.AddRow(
-                        flashcard.FlashcardsID.ToString(),
-                        flashcard.Front,
-                        flashcard.Back);
+                    _console.MarkupLine("[yellow]No flashcards found.[/]");
                 }
-                _console.Write(table);  
+                else
+                {
+                    var table = new Table();
+                    table.Border(TableBorder.Rounded)
+                        .AddColumn("ID")
+                        .AddColumn("Front")
+                        .AddColumn("Back");
+
+                    foreach (var flashcard in flashcards)
+                    {
+                        table.AddRow(
+                            flashcard.FlashcardsID.ToString(),
+                            flashcard.Front,
+                            flashcard.Back);
+                    }
+                    _console.Write(table);
+                }
             }
+            
         }
 
         catch(Exception ex)
+        {
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+        }
+
+        if (waitForKey)
+        {
+            _console.MarkupLine("[grey]Press any key to continue...[/]");
+            _console.Input.ReadKey(true);
+        }
+    }
+
+    public void CreateFlashcard(bool waitForKey = true, IAnsiConsole? console = null)
+    {
+        IAnsiConsole? _console = console ?? AnsiConsole.Console;
+
+        try
+        {
+            _console.Clear();
+            int? selectedStackId = SelectStack(_console);
+
+            if (selectedStackId is null) return;
+            else
+            {
+                var front = _console.Ask<string>("Enter the [green]question[/] of the flashcard:");
+                var back = _console.Ask<string>("Enter the [green]answer[/] of the flashcard:");
+
+                if (string.IsNullOrWhiteSpace(front) || string.IsNullOrWhiteSpace(back)) return;
+                else
+                {
+                    _flashcardsController.CreateFlashcard(selectedStackId, front, back);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+        }
+
+        if (waitForKey)
+        {
+            _console.MarkupLine("[grey]Press any key to continue...[/]");
+            _console.Input.ReadKey(true);
+        }
+    }
+
+    public void Update(bool waitForkey = true, IAnsiConsole? console = null)
+    {
+        IAnsiConsole _console = console ?? AnsiConsole.Console;
+
+        try
+        {
+            _console.Clear();
+
+        }
+        catch (Exception ex)
         {
             _console.MarkupLine($"[red]Error:[/] {ex.Message}");
         }

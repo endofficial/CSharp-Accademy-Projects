@@ -8,15 +8,15 @@ namespace Flashcards.Controllers;
 
 public interface IFlashcardsController
 {
-    List<FlashcardDto> GetAllFlashcards(int stackId);
-    void CreateFlashcard(int stackId, string front, string back);
+    List<FlashcardDto> GetAllFlashcards(int? stackId);
+    void CreateFlashcard(int? stackId, string front, string back);
     void UpdateFlashcard(int flashcardId, string front, string back);
     void DeleteFlashcard(int flashcardId);
 }
 
 internal class FlashcardsController : IFlashcardsController
 {
-    public List<FlashcardDto> GetAllFlashcards(int stackID)
+    public List<FlashcardDto> GetAllFlashcards(int? stackID)
     {
         using var connection = Database.GetConnection();
         string sql = 
@@ -40,7 +40,7 @@ internal class FlashcardsController : IFlashcardsController
         return dtoList;
     }
 
-    public void CreateFlashcard(int stackID, string front, string back)
+    public void CreateFlashcard(int? stackID, string front, string back)
     {
         using var connection = Database.GetConnection();
         string sql = "INSERT INTO Flashcards (StackID, Front, Back) VALUES (@StackID, @Front, @Back)";
