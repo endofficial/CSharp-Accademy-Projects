@@ -13,7 +13,8 @@ namespace Flashcard
             database.Initialize();
 
             IStacksController _stacksController = new StacksController();
-            UserInterface userInterface = new(_stacksController);
+            IFlashcardsController _flashcardsController = new FlashcardsController();
+            UserInterface userInterface = new(_stacksController, _flashcardsController);
             userInterface.MainMenu();
         }
     }

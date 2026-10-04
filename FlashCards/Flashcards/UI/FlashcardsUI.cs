@@ -42,6 +42,7 @@ public class FlashcardsUI
                     ShowFlashcards();
                     break;
                 case FlashcardAction.CreateFlashcard:
+                    CreateFlashcard();
                     break;
                 case FlashcardAction.UpdateFlashcard:
                     break;
@@ -163,7 +164,7 @@ public class FlashcardsUI
 
         if (waitForKey)
         {
-            _console.MarkupLine("[grey]Press any key to continue...[/]");
+            _console.MarkupLine("\n[grey]Press any key to continue...[/]");
             _console.Input.ReadKey(true);
         }
     }
