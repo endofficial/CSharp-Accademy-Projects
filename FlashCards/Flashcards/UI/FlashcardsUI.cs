@@ -45,6 +45,7 @@ public class FlashcardsUI
                     CreateFlashcard();
                     break;
                 case FlashcardAction.UpdateFlashcard:
+                    UpdateFlashcard();
                     break;
                 case FlashcardAction.DeleteFlashcard:
                     break;
@@ -55,7 +56,6 @@ public class FlashcardsUI
         }
     }
 
-    // modificare, separare le responsabilità
     public int? SelectStack(IAnsiConsole? console = null)
     {
         IAnsiConsole? _console = console ?? AnsiConsole.Console;
@@ -169,13 +169,38 @@ public class FlashcardsUI
         }
     }
 
-    public void Update(bool waitForkey = true, IAnsiConsole? console = null)
+    public void UpdateFlashcard(bool waitForkey = true, IAnsiConsole? console = null)
     {
         IAnsiConsole _console = console ?? AnsiConsole.Console;
 
         try
         {
             _console.Clear();
+            int? SelectedStacks = SelectStack(_console);
+
+            if (SelectedStacks is null) return;
+            else
+            {
+                var AllFlashcard = _flashcardsController.GetAllFlashcards(SelectedStacks);
+
+                if (!AllFlashcard.Any())
+                {
+                    _console.MarkupLine("[yellow]Flashcards not found in this stack.[/]");
+                }
+                else
+                {
+                    var selectedFlashcard = AnsiConsole.Prompt(
+                    new SelectionPrompt<FlashcardDto>()
+                    .Title("Selected FLashcard to update")
+                    .PageSize(10)
+                    .MoreChoicesText("[grey](Move up and down to reveal more flashcards)[/]")
+                    .UseConverter(flashCard => flashCard.Front)
+                    .AddChoices(AllFlashcard)
+                );
+                }
+            }
+
+            //Passo 3: Scegliere se modificare il front o il back (domanda o risposta), per poi apportare la modifica
 
         }
         catch (Exception ex)

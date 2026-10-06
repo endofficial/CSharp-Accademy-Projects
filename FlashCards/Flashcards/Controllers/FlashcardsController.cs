@@ -22,7 +22,7 @@ internal class FlashcardsController : IFlashcardsController
         string sql = 
             "SELECT * FROM dbo.Flashcards " +
             "WHERE StackID = @StackID " +
-            "ORDER BY FlashcardID ASC";
+            "ORDER BY FlashcardsID ASC";
         var rawCards = connection.Query<FlashcardModels>(sql, new { StackID = stackID }).ToList();
 
         List<FlashcardDto> dtoList = new List<FlashcardDto>();
@@ -47,11 +47,11 @@ internal class FlashcardsController : IFlashcardsController
         connection.Execute(sql, new { StackID = stackID, Front = front, Back = back });
     }
 
-    public void UpdateFlashcard(int flashcardID, string front, string back)
+    public void UpdateFlashcard(int flashcardsID, string front, string back)
     {
         using var connection = Database.GetConnection();
-        string sql = "UPDATE Flashcards SET Front = @Front, Back = @Back WHERE FlashcardID = @FlashcardID";
-        connection.Execute(sql, new { Front = front, Back = back, FlashcardID = flashcardID });
+        string sql = "UPDATE Flashcards SET Front = @Front, Back = @Back WHERE FlashcardsID = @FlashcardsID";
+        connection.Execute(sql, new { Front = front, Back = back, FlashcardsID = flashcardsID });
     }
 
     public void DeleteFlashcard(int flashcardID)

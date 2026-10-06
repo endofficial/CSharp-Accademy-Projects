@@ -3,7 +3,7 @@ using Flashcards.Controllers;
 using static Flashcards.Enums.Enums;
 using Flashcards.UI;
 
-namespace Flashcard.UI;
+namespace FlashcardMenu.UI;
 
 internal class UserInterface
 {

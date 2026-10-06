@@ -1,9 +1,9 @@
 ﻿using Flashcards.DataAccess;
-using Flashcard.UI;
+using FlashcardMenu.UI;
 using System.Net.Http.Headers;
 using Flashcards.Controllers;
 
-namespace Flashcard
+namespace FlashcardProject
 {
     internal class Program
     {
