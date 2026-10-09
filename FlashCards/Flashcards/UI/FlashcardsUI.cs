@@ -196,7 +196,55 @@ public class FlashcardsUI
                     .MoreChoicesText("[grey](Move up and down to reveal more flashcards)[/]")
                     .UseConverter(flashCard => flashCard.Front)
                     .AddChoices(AllFlashcard)
-                );
+                    );
+
+                    _console.MarkupLine($"[purple]Current Front:[/]{selectedFlashcard.Front}");
+                    _console.MarkupLine($"[purple]Current Back:[/]{selectedFlashcard.Back}");
+                    _console.WriteLine();
+
+                    var chooseUpFront = _console.Prompt(
+                        new SelectionPrompt<string>()
+                        .Title("Do you want update the question of the Flashcard?")
+                        .PageSize(3)
+                        .AddChoices(new[] { "Yes", "No"})
+                        );
+
+                    if (chooseUpFront == "Yes")
+                    {
+                        string UpFront = _console.Ask<string>("[blue]New question:[/]");
+
+                        _flashcardsController.UpdateFlashcard(selectedFlashcard.FlashcardsID, UpFront, selectedFlashcard.Back);
+                    } 
+                    else
+                    {
+                        _console.MarkupLine($"Front:{selectedFlashcard.Front}");
+                        _console.WriteLine();
+                    }
+
+                    var chooseUpBack = _console.Prompt(
+                        new SelectionPrompt<string>()
+                        .Title("Do you want updte the answer of the Flashcard?")
+                        .PageSize(3)
+                        .AddChoices(new[] {"Yes", "No"})
+                        );
+
+                    if (chooseUpBack == "Yes")
+                    {
+                        string UpBack = _console.Ask<string>("[blue]New answer:[/]");
+
+                        _flashcardsController.UpdateFlashcard(selectedFlashcard.FlashcardsID, selectedFlashcard.Front, UpBack);
+                    } 
+                    else
+                    {
+                        _console.MarkupLine($"Back:{selectedFlashcard.Back}");
+                        _console.WriteLine();
+                    }
+
+                    if (waitForkey)
+                    {
+                        _console.MarkupLine("[grey]Press any key to continue...[/]");
+                        _console.Input.ReadKey(true);
+                    }
                 }
             }
 
