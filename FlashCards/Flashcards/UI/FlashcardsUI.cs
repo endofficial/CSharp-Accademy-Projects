@@ -48,6 +48,7 @@ public class FlashcardsUI
                     UpdateFlashcard();
                     break;
                 case FlashcardAction.DeleteFlashcard:
+                    DeleteFlashcard();
                     break;
                 case FlashcardAction.BackToMainMenu:
                     closeApp = true;
@@ -113,7 +114,7 @@ public class FlashcardsUI
                     foreach (var flashcard in flashcards)
                     {
                         table.AddRow(
-                            flashcard.FlashcardsID.ToString(),
+                            flashcard.DisplayID.ToString(),
                             flashcard.Front,
                             flashcard.Back);
                     }
@@ -126,6 +127,7 @@ public class FlashcardsUI
         catch(Exception ex)
         {
             _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.Input.ReadKey(true);
         }
 
         if (waitForKey)
@@ -160,6 +162,7 @@ public class FlashcardsUI
         catch (Exception ex)
         {
             _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.Input.ReadKey(true);  
         }
 
         if (waitForKey)
@@ -202,6 +205,9 @@ public class FlashcardsUI
                     _console.MarkupLine($"[purple]Current Back:[/]{selectedFlashcard.Back}");
                     _console.WriteLine();
 
+                    string UpFront = selectedFlashcard.Front;
+                    string UpBack = selectedFlashcard.Back;
+
                     var chooseUpFront = _console.Prompt(
                         new SelectionPrompt<string>()
                         .Title("Do you want update the question of the Flashcard?")
@@ -209,36 +215,20 @@ public class FlashcardsUI
                         .AddChoices(new[] { "Yes", "No"})
                         );
 
-                    if (chooseUpFront == "Yes")
-                    {
-                        string UpFront = _console.Ask<string>("[blue]New question:[/]");
-
-                        _flashcardsController.UpdateFlashcard(selectedFlashcard.FlashcardsID, UpFront, selectedFlashcard.Back);
-                    } 
-                    else
-                    {
-                        _console.MarkupLine($"Front:{selectedFlashcard.Front}");
-                        _console.WriteLine();
-                    }
+                    if (chooseUpFront == "Yes") UpFront = _console.Ask<string>("[blue]New question:[/]");
+                    else UpFront = selectedFlashcard.Front;
 
                     var chooseUpBack = _console.Prompt(
                         new SelectionPrompt<string>()
-                        .Title("Do you want updte the answer of the Flashcard?")
+                        .Title("Do you want update the answer of the Flashcard?")
                         .PageSize(3)
                         .AddChoices(new[] {"Yes", "No"})
                         );
 
-                    if (chooseUpBack == "Yes")
-                    {
-                        string UpBack = _console.Ask<string>("[blue]New answer:[/]");
+                    if (chooseUpBack == "Yes") UpBack = _console.Ask<string>("[blue]New answer:[/]");
+                    else UpBack = selectedFlashcard.Back;
 
-                        _flashcardsController.UpdateFlashcard(selectedFlashcard.FlashcardsID, selectedFlashcard.Front, UpBack);
-                    } 
-                    else
-                    {
-                        _console.MarkupLine($"Back:{selectedFlashcard.Back}");
-                        _console.WriteLine();
-                    }
+                    _flashcardsController.UpdateFlashcard(selectedFlashcard.FlashcardsID, UpFront, UpBack);
 
                     if (waitForkey)
                     {
@@ -247,13 +237,78 @@ public class FlashcardsUI
                     }
                 }
             }
-
-            //Passo 3: Scegliere se modificare il front o il back (domanda o risposta), per poi apportare la modifica
-
         }
         catch (Exception ex)
         {
             _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.Input.ReadKey(true);
+        }
+    }
+
+    public void DeleteFlashcard(bool waitForkey = true, IAnsiConsole? console = null)
+    {
+        IAnsiConsole _console = console ?? AnsiConsole.Console;
+
+        try
+        {
+            _console.Clear();
+            int? SelectedStack = SelectStack(_console);
+
+            if (SelectedStack is null) return;
+            else
+            {
+                var AllFlashcards = _flashcardsController.GetAllFlashcards(SelectedStack);
+
+                if (!AllFlashcards.Any()) _console.MarkupLine($"[red]Flashcards not found in this stack.[/]");
+                else
+                {
+                    bool returnBack = true;
+                    while (returnBack)
+                    {
+                        var DeletedFlashcard = _console.Prompt(
+                        new SelectionPrompt<FlashcardDto>()
+                        .Title("Select the flashcard you want to delete:")
+                        .PageSize(10)
+                        .UseConverter(flashcard => flashcard.Front)
+                        .AddChoices(AllFlashcards)
+                        );
+
+                        var idDel = DeletedFlashcard.FlashcardsID;
+
+                        var confirmDel = _console.Prompt(
+                        new SelectionPrompt<string>()
+                        .Title("Do you want delete this Flashcard?")
+                        .PageSize(3)
+                        .AddChoices(new[] { "Yes", "No" })
+                        );
+
+                        if (confirmDel == "Yes")
+                        {
+                            _flashcardsController.DeleteFlashcard(idDel);
+
+                            _console.MarkupLine("[green]Flashcard deleted succesfully![/]");
+                            returnBack = false;
+                        }
+                        else
+                        {
+                            _console.MarkupLine("[red]You have selected 'No'[/]");
+                            returnBack = true;
+                        }
+                    }
+                    
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _console.MarkupLine($"[red]Error:[/] {ex.Message}");
+            _console.Input.ReadKey(true);
+        }
+
+        if (waitForkey)
+        {
+            _console.MarkupLine("[grey]Press any key to continue...[/]");
+            _console.Input.ReadKey(true);
         }
     }
 }

@@ -54,11 +54,11 @@ internal class FlashcardsController : IFlashcardsController
         connection.Execute(sql, new { Front = front, Back = back, FlashcardsID = flashcardsID });
     }
 
-    public void DeleteFlashcard(int flashcardID)
+    public void DeleteFlashcard(int flashcardsID)
     {
         using var connection = Database.GetConnection();
-        string sql = "DELETE FROM Flashcards WHERE FlashcardID = @FlashcardID";
-        connection.Execute(sql, new { FlashcardID = flashcardID });
+        string sql = "DELETE FROM Flashcards WHERE FlashcardsID = @FlashcardsID";
+        connection.Execute(sql, new { FlashcardsID = flashcardsID });
     }
 
 }
